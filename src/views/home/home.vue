@@ -1,7 +1,7 @@
 <template>
   <div class="home-container">
     <div class="container">
-
+    <background-image />
     </div>
     <home-footer />
   </div>
@@ -9,10 +9,11 @@
 
 <script>
 import HomeFooter from '@/views/home/components/home-footer'
+import BackgroundImage from '@/views/home/components/background-image'
 
 export default {
   name: 'home',
-  components: { HomeFooter },
+  components: { BackgroundImage, HomeFooter },
 }
 </script>
 
