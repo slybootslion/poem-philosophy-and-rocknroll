@@ -1,24 +1,3 @@
-# poem-philosophy-and-rocknrll
+诗歌哲学与摇滚乐
 
-## Project setup
-```
-npm install
-```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+最牛逼的浏览器首页，没有之一。

@@ -1,10 +1,10 @@
 <template>
-  <router-view/>
+  <canvas></canvas>
 </template>
 
 <script>
 export default {
-  name: 'App',
+  name: 'backgroundImage',
 }
 </script>
 
