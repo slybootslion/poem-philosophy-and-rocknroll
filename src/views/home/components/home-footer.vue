@@ -49,17 +49,19 @@ export default {
 </script>
 
 <style lang="scss" rel="stylesheet/scss" scoped>
+@import "var";
+
 .footer-box {
-  height: 30px;
+  height: p2r(30);
   background-color: #000;
   display: flex;
   align-items: center;
   justify-content: center;
   color: #fff;
-  font-size: 12px;
+  font-size: p2r(12);
 
   .footer-item {
-    margin: 0 10px;
+    margin: 0 p2r(10);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -67,7 +69,7 @@ export default {
     &::after {
       content: '|';
       position: relative;
-      left: 10px;
+      left: p2r(10);
     }
 
     &.hover {
@@ -81,9 +83,9 @@ export default {
     }
 
     .link-pic {
-      width: 16px;
-      height: 16px;
-      margin-right: 5px;
+      width: p2r(16);
+      height: p2r(16);
+      margin-right: p2r(5);
     }
   }
 }

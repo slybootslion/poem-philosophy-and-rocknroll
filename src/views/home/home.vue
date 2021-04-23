@@ -1,7 +1,8 @@
 <template>
   <div class="home-container">
     <div class="container">
-    <background-image />
+      <background-image />
+      <clock-comp :time="time" :date="date" :day="day" />
     </div>
     <home-footer />
   </div>
@@ -10,10 +11,27 @@
 <script>
 import HomeFooter from '@/views/home/components/home-footer'
 import BackgroundImage from '@/views/home/components/background-image'
+import ClockComp from '@/views/home/components/clock-comp'
+import { clock } from '@/views/home/hooks/computed-time'
 
 export default {
   name: 'home',
-  components: { BackgroundImage, HomeFooter },
+  components: {
+    ClockComp,
+    BackgroundImage,
+    HomeFooter,
+  },
+  setup () {
+    const {
+      time,
+      date,
+      day,
+    } = clock()
+
+    console.log(time, date, day)
+
+    return { time, date, day }
+  },
 }
 </script>
 

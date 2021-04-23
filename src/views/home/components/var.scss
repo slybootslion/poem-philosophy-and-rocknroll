@@ -1,0 +1,4 @@
+$ration: 100;
+@function p2r($px) {
+  @return $px / $ration + rem;
+}
