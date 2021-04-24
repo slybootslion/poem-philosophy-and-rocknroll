@@ -2,7 +2,7 @@
   <div class="home-container">
     <div class="container">
       <background-image />
-      <clock-comp :time="time" :date="date" :day="day" />
+      <clock-comp :init-time="initTime" />
     </div>
     <home-footer />
   </div>
@@ -13,6 +13,10 @@ import HomeFooter from '@/views/home/components/home-footer'
 import BackgroundImage from '@/views/home/components/background-image'
 import ClockComp from '@/views/home/components/clock-comp'
 import { clock } from '@/views/home/hooks/computed-time'
+import ThemeApi from '@/api/module/theme-api'
+// import { useStore } from 'vuex'
+
+const themeApi = new ThemeApi()
 
 export default {
   name: 'home',
@@ -21,16 +25,12 @@ export default {
     BackgroundImage,
     HomeFooter,
   },
-  setup () {
-    const {
-      time,
-      date,
-      day,
-    } = clock()
-
-    console.log(time, date, day)
-
-    return { time, date, day }
+  async setup () {
+    // const store = useStore()
+    const initTime = clock()
+    const res = await themeApi.getTheme()
+    console.log(res)
+    return { initTime }
   },
 }
 </script>

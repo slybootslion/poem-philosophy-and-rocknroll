@@ -1,10 +1,13 @@
 <template>
   <router-view/>
+  <loading-page-comp />
 </template>
 
 <script>
+import LoadingPageComp from '@/components/loading-page/loading-page-comp'
 export default {
   name: 'App',
+  components: { LoadingPageComp },
 }
 </script>
 

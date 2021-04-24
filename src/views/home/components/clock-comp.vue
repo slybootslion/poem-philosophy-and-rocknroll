@@ -1,10 +1,10 @@
 <template>
   <div class="clock centerXY">
     <div class="time-box">
-      {{ clockData.time ? clockData.time : time }}
+      {{ clockData.time || initTime.time }}
     </div>
     <div class="date-box">
-      {{ clockData.date ? clockData.date : date }} {{ clockData.day ? clockData.day : day }}
+      {{ clockData.date || initTime.date }} {{ clockData.day || initTime.day }}
     </div>
   </div>
 </template>
@@ -17,14 +17,8 @@ import { clock } from '@/views/home/hooks/computed-time'
 export default {
   name: 'clockComp',
   props: {
-    time: {
-      type: String,
-    },
-    date: {
-      type: String,
-    },
-    day: {
-      type: String,
+    initTime: {
+      type: Object,
     },
   },
   setup () {
@@ -55,7 +49,21 @@ export default {
 @import "var";
 
 .clock {
-  width: 50%;
-  height: 25%;
+  height: 35%;
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  user-select:none;
+
+  .time-box {
+    font-size: p2r(140);
+  }
+
+  .date-box {
+    font-size: p2r(36);
+  }
 }
 </style>
