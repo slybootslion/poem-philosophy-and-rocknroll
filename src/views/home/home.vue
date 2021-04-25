@@ -10,27 +10,22 @@
 
 <script>
 import HomeFooter from '@/views/home/components/home-footer'
-import BackgroundImage from '@/views/home/components/background-image'
 import ClockComp from '@/views/home/components/clock-comp'
+import BackgroundImage from '@/views/home/components/background-image'
 import { clock } from '@/views/home/hooks/computed-time'
-import ThemeApi from '@/api/module/theme-api'
-// import { useStore } from 'vuex'
-
-const themeApi = new ThemeApi()
 
 export default {
   name: 'home',
   components: {
-    ClockComp,
     BackgroundImage,
+    ClockComp,
     HomeFooter,
   },
-  async setup () {
-    // const store = useStore()
+  setup () {
     const initTime = clock()
-    const res = await themeApi.getTheme()
-    console.log(res)
-    return { initTime }
+    return {
+      initTime,
+    }
   },
 }
 </script>

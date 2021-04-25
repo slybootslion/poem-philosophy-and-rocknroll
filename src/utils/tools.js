@@ -24,3 +24,7 @@ export function showMessage (message, type = 'error', duration = 1200) {
 export function simulateClearInterval (intervalId) {
   clearTimeout(intervalId)
 }
+
+export function randomInt (min, max) {
+  return Math.round(Math.random() * (max - min)) + min
+}
