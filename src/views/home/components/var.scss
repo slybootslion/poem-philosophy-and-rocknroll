@@ -2,3 +2,6 @@ $ration: 100;
 @function p2r($px) {
   @return $px / $ration + rem;
 }
+
+$color-primary: #c41d32;
+$color-info: #909399;

@@ -1,5 +1,6 @@
 <template>
-  <div class="clock centerXY">
+  <div class="clock centerXY"
+       :class="store.getters.isNight ? 'night' : ''">
     <div class="time-box">
       {{ clockData.time || initTime.time }}
     </div>
@@ -13,6 +14,7 @@
 import { reactive } from 'vue'
 import { simulateInterval } from '@/utils'
 import { clock } from '@/views/home/hooks/computed-time'
+import { useStore } from 'vuex'
 
 export default {
   name: 'clockComp',
@@ -22,6 +24,8 @@ export default {
     },
   },
   setup () {
+    const store = useStore()
+
     const clockData = reactive({
       time: '',
       day: '',
@@ -29,7 +33,13 @@ export default {
     })
 
     const computedClock = () => {
-      const { day, date, time } = clock()
+      const { day, date, time, hour } = clock()
+      if (store.getters.isAutoNightModel) {
+        hour >= 22 || hour < 6
+          ? store.dispatch('sys/nightAction', true)
+          : store.dispatch('sys/nightAction', false)
+      }
+
       clockData.day = day
       clockData.time = time
       clockData.date = date
@@ -40,6 +50,7 @@ export default {
     return {
       clockData,
       clock,
+      store,
     }
   },
 }
@@ -56,7 +67,11 @@ export default {
   justify-content: center;
   align-items: center;
   text-align: center;
-  user-select:none;
+  user-select: none;
+
+  &.night {
+    opacity: .2;
+  }
 
   .time-box {
     font-size: p2r(140);

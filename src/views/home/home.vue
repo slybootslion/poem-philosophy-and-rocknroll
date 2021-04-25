@@ -3,6 +3,7 @@
     <div class="container">
       <background-image />
       <clock-comp :init-time="initTime" />
+      <home-setting />
     </div>
     <home-footer />
   </div>
@@ -13,10 +14,12 @@ import HomeFooter from '@/views/home/components/home-footer'
 import ClockComp from '@/views/home/components/clock-comp'
 import BackgroundImage from '@/views/home/components/background-image'
 import { clock } from '@/views/home/hooks/computed-time'
+import HomeSetting from '@/views/home/components/home-setting/index'
 
 export default {
   name: 'home',
   components: {
+    HomeSetting,
     BackgroundImage,
     ClockComp,
     HomeFooter,

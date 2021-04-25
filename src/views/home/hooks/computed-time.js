@@ -12,7 +12,10 @@ const dayDict = {
 
 export const clock = () => {
   const date = dayjs(new Date())
+  const hour = date.hour()
+
   return {
+    hour,
     time: date.format('HH:mm:ss'),
     date: date.format('YYYY年MM月DD日'),
     day: dayDict[date.day()],

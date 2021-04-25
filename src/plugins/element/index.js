@@ -1,8 +1,11 @@
-import { ElButton } from 'element-plus'
+import {
+  ElButton, ElPopover, ElMenu, ElMenuItem, ElDivider,
+  ElSwitch,
+} from 'element-plus'
 
 import './element-variables.scss'
 
-const elementComponents = [ElButton]
+const elementComponents = [ElButton, ElPopover, ElMenu, ElMenuItem, ElDivider, ElSwitch]
 
 export default function initElement (app) {
   app.config.globalProperties.$ELEMENT = {

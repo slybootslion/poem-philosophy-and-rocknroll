@@ -12,7 +12,7 @@ export default {
   components: { LoadingPageComp },
   setup () {
     const store = useStore()
-    store.dispatch('sys/setIsLoadingActions', true)
+    store.dispatch('sys/setIsLoadingAction', true)
     return {
       store,
     }
