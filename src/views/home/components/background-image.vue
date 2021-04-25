@@ -47,9 +47,7 @@ export default {
       simulateInterval(() => {
         function selectIndex () {
           const index = selectImg(list).index
-          if (index === currentIndex) {
-            return selectIndex()
-          }
+          if (index === currentIndex) return selectIndex()
           return index
         }
         const index = selectIndex()
