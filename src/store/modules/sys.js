@@ -1,8 +1,8 @@
 const state = {
   isLoading: true,
-  autoNightModel: true,
+  autoNightModel: false,
   nightModel: false,
-  night: true,
+  night: false,
 }
 
 const mutations = {

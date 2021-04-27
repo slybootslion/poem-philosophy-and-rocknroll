@@ -34,7 +34,7 @@ export default {
     const currentMenu = ref('夜间模式')
     const menuItemList = reactive([
       {
-        name: '夜间模式',
+        name: '显示设置',
         icon: 'icon-flashlightopen',
       },
       {
