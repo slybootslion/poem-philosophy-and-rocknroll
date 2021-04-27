@@ -39,6 +39,11 @@ export default {
 
     // eslint-disable-next-line no-unused-vars
     const picHandle = () => {
+      if (!list.length) {
+        loadPic(url.value)
+        return
+      }
+
       let {
         index: currentIndex,
         item: currentImage,
@@ -68,10 +73,12 @@ export default {
 
     onMounted(async () => {
       list = await themeApi.getTheme()
-      list = list.map(item => {
-        item.url = baseOssURL + item.ossName
-        return item
-      })
+      if (list.length) {
+        list = list.map(item => {
+          item.url = baseOssURL + item.ossName
+          return item
+        })
+      }
       picHandle()
       // store.dispatch('sys/setIsLoadingAction', false)
     })
