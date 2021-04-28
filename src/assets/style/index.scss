@@ -36,3 +36,23 @@ html, body, #app {
     text-overflow: ellipsis;
   }
 }
+
+.scroll-style {
+  &::-webkit-scrollbar {
+    width: p2r(4);
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: p2r(10);
+    -webkit-box-shadow: inset 0 0 p2r(5) rgba(0, 0, 0, .2);
+    background: rgba(0, 0, 0, .2);
+  }
+  &::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 p2r(5) rgba(0, 0, 0, .2);
+    border-radius: 0;
+    background: rgba(0, 0, 0, .1);
+  }
+}
+
+body .popper-style {
+  padding-left: 0 !important;
+}
