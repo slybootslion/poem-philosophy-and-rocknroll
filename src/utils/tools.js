@@ -1,4 +1,9 @@
 import { ElMessage } from 'element-plus'
+import { v4 } from 'uuid'
+
+export function simulateClearInterval (intervalId) {
+  clearTimeout(intervalId)
+}
 
 export function simulateInterval (callback, interval) {
   let timerId = null
@@ -21,10 +26,10 @@ export function showMessage (message, type = 'error', duration = 1200) {
   })
 }
 
-export function simulateClearInterval (intervalId) {
-  clearTimeout(intervalId)
-}
-
 export function randomInt (min, max) {
   return Math.round(Math.random() * (max - min)) + min
+}
+
+export function createUuid () {
+  return v4()
 }

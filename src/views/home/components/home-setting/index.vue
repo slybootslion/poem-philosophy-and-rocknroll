@@ -1,6 +1,5 @@
 <template>
   <el-popover :width="680"
-              :popper-append-to-body="false"
               popper-class="popper-style"
               trigger="click">
     <template #reference>
@@ -20,15 +19,20 @@
           </el-menu-item>
         </div>
         <div>
-          <el-menu-item index="用户">
-            <i class="iconfont icon-flashlightopen"></i>
-            <template #title>用户</template>
+          <el-menu-item index="用户设置">
+            <i class="iconfont icon-friendfamous" v-if="!getters.isLogin"></i>
+            <img class="user-avatar"
+                 v-else
+                 src="https://thirdwx.qlogo.cn/mmopen/vi_32/5c1gkU1VMGpxXFtMicMakEaQxAjrQwWYo6uhaeMic0L6XicgfVKLF2MZtYUDArwRxP5qT8xiaofD6LmvTzYvscg8jg/132"
+                 alt="">
+            <template #title>用户设置</template>
           </el-menu-item>
         </div>
       </el-menu>
       <div class="menu-content scroll-style">
         <home-setting-night-model v-if="currentMenu === '显示设置'" />
         <div v-if="currentMenu === '测试'">test</div>
+        <home-setting-user-setting v-if="currentMenu === '用户设置'" />
       </div>
     </div>
   </el-popover>
@@ -36,13 +40,16 @@
 
 <script>
 import { reactive, ref } from 'vue'
-import HomeSettingNightModel from '@/views/home/components/home-setting/night-comp'
+import { useStore } from 'vuex'
+import HomeSettingNightModel from './night-comp'
+import HomeSettingUserSetting from './setting-user'
 
 export default {
   name: 'homeSetting',
-  components: { HomeSettingNightModel },
+  components: { HomeSettingUserSetting, HomeSettingNightModel },
   setup () {
-    const currentMenu = ref('显示设置')
+    const store = useStore()
+    const currentMenu = ref('用户设置')
     const menuItemList = reactive([
       {
         name: '显示设置',
@@ -63,6 +70,7 @@ export default {
       menuItemList,
       currentMenu,
       menuSelect,
+      getters: store.getters,
     }
   },
 }
@@ -103,6 +111,14 @@ export default {
     overflow-y: auto;
     overflow-x: hidden;
     flex: 1;
+  }
+
+  .user-avatar {
+    width: 36px;
+    height: 36px;
+    margin-left: -8px;
+    border-radius: 50%;
+    border: 1px solid #ededed;
   }
 }
 

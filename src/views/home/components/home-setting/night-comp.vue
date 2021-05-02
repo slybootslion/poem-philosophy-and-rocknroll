@@ -20,8 +20,8 @@
 </template>
 
 <script>
-import HomeSettingContainer from '@/views/home/components/home-setting/setting-container'
-import HomeSettingItem from '@/views/home/components/home-setting/setting-item'
+import HomeSettingContainer from './setting-container'
+import HomeSettingItem from './setting-item'
 import { useStore } from 'vuex'
 import { ref } from 'vue'
 
