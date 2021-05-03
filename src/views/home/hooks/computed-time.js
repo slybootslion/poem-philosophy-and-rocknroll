@@ -1,4 +1,5 @@
 import dayjs from 'dayjs'
+import mitt from 'mitt'
 
 const dayDict = {
   0: '星期日',
@@ -21,3 +22,27 @@ export const clock = () => {
     day: dayDict[date.day()],
   }
 }
+
+// export const HomeEventBus = {
+//   emitter: mitt(),
+//
+//   on (str, fn) {
+//     this.emitter.on(str, e => fn(e))
+//   },
+//
+//   emit (str, data) {
+//     this.emitter.emit(str, data)
+//   },
+//
+//   off (str, fn) {
+//     console.log(fn)
+//     this.emitter.off(str, fn)
+//   },
+//
+//   clearAll () {
+//     this.emitter.all.clear()
+//   },
+//
+// }
+
+export const HomeEventBus = mitt()

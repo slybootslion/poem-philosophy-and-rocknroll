@@ -27,6 +27,12 @@ class PublicApi {
       params: { uuid },
     })
   }
+
+  logout () {
+    return http({
+      url: `${this.prefix}/logout`,
+    })
+  }
 }
 
 export default PublicApi

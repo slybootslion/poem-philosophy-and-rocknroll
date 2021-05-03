@@ -10,7 +10,7 @@ const mutations = {
   SET_USER_INFO (state, userInfo) {
     state.userInfo = userInfo
   },
-  REMOVE_USER_DATA () {
+  REMOVE_USER_DATA (state) {
     state.token = ''
     state.userInfo = {}
   },

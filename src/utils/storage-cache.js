@@ -20,6 +20,10 @@ class StorageCache extends WebStorageCache {
   getQRCode () {
     return this.get('qrcode')
   }
+
+  removeQRCode () {
+    this.delete('qrcode')
+  }
 }
 
 const storageCache = new StorageCache()

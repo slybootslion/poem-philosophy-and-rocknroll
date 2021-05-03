@@ -6,11 +6,12 @@
 </template>
 
 <script>
-import { onMounted, ref } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
 import ThemeApi from '@/api/module/theme-api'
 import { baseOssURL } from '@/config/setting'
 import { useStore } from 'vuex'
 import { randomInt } from '@/utils'
+import { HomeEventBus } from '@/views/home/hooks/computed-time'
 
 const themeApi = new ThemeApi()
 export default {
@@ -37,7 +38,6 @@ export default {
       }
     }
 
-    // eslint-disable-next-line no-unused-vars
     const picHandle = () => {
       if (!list.length) {
         loadPic(url.value)
@@ -62,7 +62,6 @@ export default {
         const index = selectImg(list).index
         if (index === currentIndex) return selectIndex()
         setTimeout(() => {
-          console.log(new Date())
           changeImg()
         }, changeBgTime)
         return index
@@ -71,7 +70,7 @@ export default {
       selectIndex()
     }
 
-    onMounted(async () => {
+    const getNetList = async () => {
       list = await themeApi.getTheme()
       if (list.length) {
         list = list.map(item => {
@@ -79,9 +78,24 @@ export default {
           return item
         })
       }
+    }
+
+    onMounted(async () => {
+      await getNetList()
       picHandle()
       // store.dispatch('sys/setIsLoadingAction', false)
     })
+
+    async function RefreshTheme () {
+      await getNetList()
+      picHandle()
+    }
+
+    onUnmounted(() => {
+      HomeEventBus.off('RefreshTheme', RefreshTheme)
+    })
+
+    HomeEventBus.on('RefreshTheme', RefreshTheme)
 
     return {
       url,

@@ -1,13 +1,25 @@
 <template>
-  <home-setting-container>
-    <div class="qr-code" v-if="!getters.isLogin">
+  <home-setting-container v-if="!getters.isLogin">
+    <div class="qr-code">
       <el-image class="qr-image"
                 :src="qrLink" />
       <div class="img-mask" v-show="showMask" @click="getQRCode">点击刷新</div>
     </div>
-    <div v-else>
-      已登录
-    </div>
+  </home-setting-container>
+  <home-setting-container v-else>
+    <home-setting-item text="退出登录" hide>
+      <el-popconfirm
+        confirmButtonText='好的'
+        cancelButtonText='不用了'
+        @confirm="logout"
+        title="是否退出登录？"
+      >
+        <template #reference>
+          <el-button>退出</el-button>
+        </template>
+      </el-popconfirm>
+
+    </home-setting-item>
   </home-setting-container>
 </template>
 
@@ -16,13 +28,15 @@ import HomeSettingContainer from './setting-container'
 import { onUnmounted, ref } from 'vue'
 import { useStore } from 'vuex'
 import PublicApi from '@/api/module/public-api'
-import { storageCache, TimerSimulateInterval } from '@/utils'
+import { showMessage, storageCache, TimerSimulateInterval } from '@/utils'
+import HomeSettingItem from '@/views/home/components/home-setting/setting-item'
+import { HomeEventBus } from '@/views/home/hooks/computed-time'
 
 const publicApi = new PublicApi()
 
 export default {
   name: 'home-setting-user-setting',
-  components: { HomeSettingContainer },
+  components: { HomeSettingItem, HomeSettingContainer },
   setup () {
     const store = useStore()
     const qrLink = ref('')
@@ -48,13 +62,18 @@ export default {
           clearCheckLogin()
           await store.dispatch('user/setTokenAction', token)
           await store.dispatch('user/setUserInfoAction', userInfo)
+          await storageCache.removeQRCode()
+          // 重新刷新主题图片列表
+          HomeEventBus.emit('RefreshTheme')
         }
       }
 
       timerSi.simulateInterval(checkLoginRequest, 1000)
     }
 
-    onUnmounted(() => timerSi.simulateClearInterval())
+    onUnmounted(() => {
+      timerSi.simulateClearInterval()
+    })
 
     const getQRCode = async () => {
       if (store.getters.isLogin) return
@@ -72,11 +91,19 @@ export default {
     }
     getQRCode()
 
+    const logout = async () => {
+      const res = await publicApi.logout()
+      showMessage(res.message, 'success')
+      await store.dispatch('user/removeUserDataAction')
+      // 暂不刷新主题列表，节省流量
+    }
+
     return {
       qrLink,
       getQRCode,
       showMask,
       getters: store.getters,
+      logout,
     }
   },
 }
