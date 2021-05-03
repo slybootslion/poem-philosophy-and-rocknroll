@@ -11,8 +11,8 @@
 </template>
 
 <script>
-import { reactive } from 'vue'
-import { simulateInterval } from '@/utils'
+import { onUnmounted, reactive } from 'vue'
+import { TimerSimulateInterval } from '@/utils'
 import { clock } from '@/views/home/hooks/computed-time'
 import { useStore } from 'vuex'
 
@@ -45,7 +45,10 @@ export default {
       clockData.date = date
     }
 
-    simulateInterval(computedClock, 1000)
+    const timerSi = new TimerSimulateInterval()
+    timerSi.simulateInterval(computedClock, 1000)
+    onUnmounted(() => { timerSi.simulateClearInterval() })
+    // simulateInterval(computedClock, 1000)
 
     return {
       clockData,

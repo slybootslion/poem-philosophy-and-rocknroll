@@ -18,6 +18,15 @@ class PublicApi {
       params: { uuid },
     })
   }
+
+  checkLogin () {
+    const uuid = storageCache.getUuid()
+    if (!uuid) return false
+    return http({
+      url: `${this.prefix}/check-login`,
+      params: { uuid },
+    })
+  }
 }
 
 export default PublicApi

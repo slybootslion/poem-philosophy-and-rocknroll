@@ -49,7 +49,7 @@ export default {
   components: { HomeSettingUserSetting, HomeSettingNightModel },
   setup () {
     const store = useStore()
-    const currentMenu = ref('用户设置')
+    const currentMenu = ref('显示设置')
     const menuItemList = reactive([
       {
         name: '显示设置',
@@ -62,7 +62,6 @@ export default {
     ])
 
     function menuSelect (name) {
-      console.log(name)
       currentMenu.value = name
     }
 

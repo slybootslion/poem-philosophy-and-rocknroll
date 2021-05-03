@@ -14,7 +14,7 @@ class StorageCache extends WebStorageCache {
   }
 
   setQRCode (qrcodeStr) {
-    this.set('qrcode', qrcodeStr, { exp: 60 * 10 })
+    this.set('qrcode', qrcodeStr, { exp: 60 * 3 })
   }
 
   getQRCode () {
