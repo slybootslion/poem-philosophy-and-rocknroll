@@ -23,7 +23,7 @@
             <i class="iconfont icon-friendfamous" v-if="!getters.isLogin"></i>
             <img class="user-avatar"
                  v-else
-                 src="https://thirdwx.qlogo.cn/mmopen/vi_32/5c1gkU1VMGpxXFtMicMakEaQxAjrQwWYo6uhaeMic0L6XicgfVKLF2MZtYUDArwRxP5qT8xiaofD6LmvTzYvscg8jg/132"
+                 :src="getters.userInfo.avatarUrl"
                  alt="">
             <template #title>用户设置</template>
           </el-menu-item>
@@ -31,7 +31,7 @@
       </el-menu>
       <div class="menu-content scroll-style">
         <home-setting-night-model v-if="currentMenu === '显示设置'" />
-        <div v-if="currentMenu === '测试'">test</div>
+        <home-setting-theme-setting v-if="currentMenu === '主题设置'" />
         <home-setting-user-setting v-if="currentMenu === '用户设置'" />
       </div>
     </div>
@@ -39,27 +39,38 @@
 </template>
 
 <script>
-import { reactive, ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useStore } from 'vuex'
-import HomeSettingNightModel from './night-comp'
+import HomeSettingNightModel from './setting-night'
 import HomeSettingUserSetting from './setting-user'
+import HomeSettingThemeSetting from '@/views/home/components/home-setting/setting-theme'
 
 export default {
   name: 'homeSetting',
-  components: { HomeSettingUserSetting, HomeSettingNightModel },
+  components: { HomeSettingThemeSetting, HomeSettingUserSetting, HomeSettingNightModel },
   setup () {
     const store = useStore()
     const currentMenu = ref('显示设置')
-    const menuItemList = reactive([
+
+    const originList = [
       {
         name: '显示设置',
         icon: 'icon-flashlightopen',
       },
       {
-        name: '测试',
+        name: '主题设置',
         icon: 'icon-discover',
+        auth: true,
       },
-    ])
+    ]
+
+    const menuItemList = computed(() => {
+      const isLogin = store.getters.isLogin
+      return originList.filter(item => {
+        if (item.auth == null) return item
+        if (item.auth && isLogin) return item
+      })
+    })
 
     function menuSelect (name) {
       currentMenu.value = name
@@ -84,6 +95,11 @@ export default {
   bottom: p2r(20);
   cursor: pointer;
   font-size: p2r(28);
+  transition: all .3s;
+
+  &:hover {
+    color: #fff;
+  }
 }
 
 .menu-box {

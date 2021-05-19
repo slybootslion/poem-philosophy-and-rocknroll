@@ -10,6 +10,20 @@ class ThemeApi {
       url: `${this.prefix}/list`,
     })
   }
+
+  getSettingTheme () {
+    return http({
+      url: `${this.prefix}/setting-list`,
+    })
+  }
+
+  patchUserSettingTheme (data) {
+    return http({
+      url: `${this.prefix}/user-theme`,
+      method: 'patch',
+      data,
+    })
+  }
 }
 
 export default ThemeApi

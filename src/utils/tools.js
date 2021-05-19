@@ -47,6 +47,7 @@ export class TimerSimulateInterval {
 // }
 
 export function showMessage (message, type = 'error', duration = 1200) {
+  // 'success','warning','info','error',''
   ElMessage({
     message,
     type,

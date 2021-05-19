@@ -8,19 +8,20 @@
 <script>
 import { onMounted, onUnmounted, ref } from 'vue'
 import ThemeApi from '@/api/module/theme-api'
-import { baseOssURL } from '@/config/setting'
 import { useStore } from 'vuex'
 import { randomInt } from '@/utils'
-import { HomeEventBus } from '@/views/home/hooks/computed-time'
+import { HomeEventBus, urlFormat } from '@/views/home/hooks'
 
 const themeApi = new ThemeApi()
+
 export default {
   name: 'backgroundImage',
   setup () {
     const url = ref('https://static.uniformfox.com/static/pic/ppr/bg/1.jpg')
     const store = useStore()
     const changeBgTime = 60 * 60 * 3 * 1000
-    let list = []
+    // const changeBgTime = 5 * 1000
+    let timer = null
 
     const loadPic = src => {
       const image = new Image()
@@ -38,12 +39,12 @@ export default {
       }
     }
 
-    const picHandle = () => {
+    const picHandle = id => {
+      const list = store.state.theme.themeShowList
       if (!list.length) {
         loadPic(url.value)
         return
       }
-
       let {
         index: currentIndex,
         item: currentImage,
@@ -53,17 +54,25 @@ export default {
 
       url.value = list[currentIndex].url
 
-      const changeImg = () => {
+      const changeImg = list => {
         const index = currentIndex = selectIndex()
-        url.value = list[index].url
+        if (index != null) url.value = list[index].url
       }
 
       function selectIndex () {
+        const list = store.state.theme.themeShowList
+        if (list.length === 1) return
         const index = selectImg(list).index
         if (index === currentIndex) return selectIndex()
-        setTimeout(() => {
-          changeImg()
-        }, changeBgTime)
+        if (id) {
+          url.value = list.find(theme => theme.id === id).url
+          id = null
+        }
+        if (timer) {
+          clearTimeout(timer)
+          timer = null
+        }
+        timer = setTimeout(() => changeImg(list), changeBgTime)
         return index
       }
 
@@ -71,31 +80,29 @@ export default {
     }
 
     const getNetList = async () => {
-      list = await themeApi.getTheme()
-      if (list.length) {
-        list = list.map(item => {
-          item.url = baseOssURL + item.ossName
-          return item
-        })
+      const list = await themeApi.getTheme()
+      await urlFormat(list, store)
+    }
+
+    async function refreshTheme (eventData) {
+      let id = null
+      if (!eventData) {
+        await getNetList()
+      } else {
+        eventData.state && (id = eventData.themeId)
       }
+      picHandle(id)
     }
 
     onMounted(async () => {
-      await getNetList()
-      picHandle()
-      // store.dispatch('sys/setIsLoadingAction', false)
+      await refreshTheme()
     })
-
-    async function RefreshTheme () {
-      await getNetList()
-      picHandle()
-    }
 
     onUnmounted(() => {
-      HomeEventBus.off('RefreshTheme', RefreshTheme)
+      HomeEventBus.off('RefreshTheme', refreshTheme)
     })
 
-    HomeEventBus.on('RefreshTheme', RefreshTheme)
+    HomeEventBus.on('RefreshTheme', refreshTheme)
 
     return {
       url,

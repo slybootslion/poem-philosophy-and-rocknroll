@@ -12,6 +12,7 @@
     "core-js": "^3.6.5",
     "dayjs": "^1.10.4",
     "element-plus": "^1.0.2-beta.40",
+    "hotkeys-js": "^3.8.5",
     "mitt": "^2.1.0",
     "normalize.css": "^8.0.1",
     "uuid": "^8.3.2",

@@ -13,7 +13,7 @@
 <script>
 import { onUnmounted, reactive } from 'vue'
 import { TimerSimulateInterval } from '@/utils'
-import { clock } from '@/views/home/hooks/computed-time'
+import { clock } from '@/views/home/hooks'
 import { useStore } from 'vuex'
 
 export default {

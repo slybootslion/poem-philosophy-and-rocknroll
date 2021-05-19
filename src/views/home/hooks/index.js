@@ -1,5 +1,7 @@
 import dayjs from 'dayjs'
 import mitt from 'mitt'
+import hotkeys from 'hotkeys-js'
+import { baseOssURL } from '@/config/setting'
 
 const dayDict = {
   0: '星期日',
@@ -23,26 +25,19 @@ export const clock = () => {
   }
 }
 
-// export const HomeEventBus = {
-//   emitter: mitt(),
-//
-//   on (str, fn) {
-//     this.emitter.on(str, e => fn(e))
-//   },
-//
-//   emit (str, data) {
-//     this.emitter.emit(str, data)
-//   },
-//
-//   off (str, fn) {
-//     console.log(fn)
-//     this.emitter.off(str, fn)
-//   },
-//
-//   clearAll () {
-//     this.emitter.all.clear()
-//   },
-//
-// }
-
 export const HomeEventBus = mitt()
+
+export async function urlFormat (list, store) {
+  if (list.length) {
+    list = list.map(item => {
+      item.url = baseOssURL + item.ossName
+      return item
+    })
+  }
+  await store.dispatch('theme/setThemeShowListAction', list)
+  return list
+}
+
+export async function hotKeyJs (hotkey, fn) {
+  hotkeys(hotkey, fn)
+}

@@ -26,7 +26,7 @@ import { useStore } from 'vuex'
 import { ref } from 'vue'
 
 export default {
-  name: 'homeSettingNightModel',
+  name: 'home-setting-night-model',
   components: {
     HomeSettingItem,
     HomeSettingContainer,
