@@ -68,8 +68,7 @@ export default {
         return
       }
       const res = await themeApi.patchUserSettingTheme({ id: themeId, state })
-      const r = await urlFormat(res, store)
-      console.log(r)
+      await urlFormat(res, store)
       currentTheme.selected = state
       HomeEventBus.emit('RefreshTheme', { state, themeId })
     }

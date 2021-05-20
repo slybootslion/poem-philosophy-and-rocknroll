@@ -80,8 +80,12 @@ export default {
     }
 
     const getNetList = async () => {
-      const list = await themeApi.getTheme()
-      await urlFormat(list, store)
+      try {
+        const list = await themeApi.getTheme()
+        await urlFormat(list, store)
+      } catch (err) {
+        console.log(err)
+      }
     }
 
     async function refreshTheme (eventData) {

@@ -123,6 +123,7 @@ function handleServerActiveException (code, message, res) {
       if (token === '令牌过期') {
         logout()
         showMessage(token)
+        reject(message)
         return
       }
       const { config } = res
