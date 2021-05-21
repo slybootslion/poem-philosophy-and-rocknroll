@@ -4,7 +4,12 @@
       <background-image />
       <clock-comp :init-time="initTime" />
       <home-setting />
+      <div class="search-icon-box">
+        <span class="iconfont icon-newshot" @click="onLink"></span>
+        <span class="iconfont icon-search" @click="onSearch"></span>
+      </div>
       <search-board />
+      <link-board />
     </div>
     <home-footer />
   </div>
@@ -17,10 +22,12 @@ import BackgroundImage from '@/views/home/components/background-image'
 import { clock, HomeEventBus, hotKeyJs } from '@/views/home/hooks'
 import HomeSetting from '@/views/home/components/home-setting/index'
 import SearchBoard from '@/views/home/components/search-board'
+import LinkBoard from '@/views/home/components/link-board'
 
 export default {
   name: 'home',
   components: {
+    LinkBoard,
     SearchBoard,
     HomeSetting,
     BackgroundImage,
@@ -30,21 +37,28 @@ export default {
   setup () {
     const initTime = clock()
 
+    const onSearch = () => HomeEventBus.emit('toggleSearchBoard', true)
+
+    const onLink = () => HomeEventBus.emit('toggleLinkBoard')
+
     const initHotkey = () => {
-      hotKeyJs('alt+s', () => {
-        HomeEventBus.emit('showSearchBoard')
-      })
+      hotKeyJs('alt+q', onSearch)
+      hotKeyJs('alt+l', onLink)
     }
     initHotkey()
 
     return {
       initTime,
+      onSearch,
+      onLink,
     }
   },
 }
 </script>
 
 <style lang="scss" rel="stylesheet/scss" scoped>
+@import "./components/var";
+
 .home-container {
   height: 100%;
   overflow-y: auto;
@@ -58,6 +72,23 @@ export default {
     width: 100%;
     height: 100%;
     position: relative;
+
+    .search-icon-box {
+      position: absolute;
+      top: p2r(20);
+      left: p2r(20);
+
+      .iconfont {
+        font-size: p2r(28);
+        color: $color-info;
+        padding: 0 5px;
+        cursor: pointer;
+
+        &:hover {
+          color: #fff;
+        }
+      }
+    }
   }
 }
 </style>

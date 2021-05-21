@@ -62,3 +62,15 @@ export function randomInt (min, max) {
 export function createUuid () {
   return v4()
 }
+
+export function checkRegCN (str) {
+  return /[\u4E00-\u9FA5]+/.test(str)
+}
+
+export function checkRegEN (str) {
+  return /^[A-Za-z _-]+$/.test(str)
+}
+
+export function checkRegNum (str) {
+  return /^\d+$/.test(str)
+}

@@ -24,6 +24,23 @@ class StorageCache extends WebStorageCache {
   removeQRCode () {
     this.delete('qrcode')
   }
+
+  unshiftSearchHistoryItem (str, force = false) {
+    let arr = this.getSearchHistory() || []
+    if (arr.length && arr.includes(str)) {
+      arr = arr.filter(item => item !== str)
+      if (force) {
+        this.set('searchHistory', arr)
+        return
+      }
+    }
+    arr.unshift(str)
+    this.set('searchHistory', arr)
+  }
+
+  getSearchHistory () {
+    return this.get('searchHistory')
+  }
 }
 
 const storageCache = new StorageCache()
