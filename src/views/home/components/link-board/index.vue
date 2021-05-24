@@ -10,20 +10,29 @@
 </template>
 
 <script>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { HomeEventBus } from '@/views/home/hooks'
+import LinkApi from '@/api/module/link-api'
+
+const linkApi = new LinkApi()
 
 export default {
   name: 'linkBoard',
   setup () {
-    console.log('in link board')
-
     const isShow = ref(false)
     const toggleShow = () => isShow.value = !isShow.value
     HomeEventBus.on('toggleLinkBoard', toggleShow)
 
+    let list = []
+
+    onMounted(async () => {
+      list = await linkApi.getLinkList()
+      console.log(list)
+    })
+
     return {
       isShow,
+      list,
     }
   },
 }
@@ -35,9 +44,6 @@ export default {
   .link-box {
     width: 80%;
     height: 80%;
-    background-color: rgba(0, 0, 0, .1);
-    backdrop-filter: blur(3px);
-    border-radius: p2r(10);
   }
 }
 </style>

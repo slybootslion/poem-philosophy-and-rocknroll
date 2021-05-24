@@ -203,7 +203,7 @@ export default {
     .el-input {
       position: relative;
 
-      &::v-deep .el-input__inner {
+      &:deep(.el-input__inner) {
         width: 100%;
         height: 36px;
         border: 1px solid #ccc;
@@ -221,7 +221,7 @@ export default {
         }
       }
 
-      &::v-deep .el-input-group__prepend {
+      &:deep(.el-input-group__prepend) {
         position: absolute;
         margin: 0;
         padding: 0;
@@ -255,7 +255,7 @@ export default {
         }
       }
 
-      &::v-deep .el-input__suffix {
+      &:deep(.el-input__suffix) {
         top: 5px;
         right: 20px;
       }

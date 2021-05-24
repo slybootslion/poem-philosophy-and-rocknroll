@@ -105,7 +105,7 @@ export default {
 .menu-box {
   display: flex;
 
-  &::v-deep .el-menu.el-menu--collapse {
+  &:deep(.el-menu.el-menu--collapse) {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
