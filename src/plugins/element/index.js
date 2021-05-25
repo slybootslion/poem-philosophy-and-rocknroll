@@ -2,11 +2,12 @@ import {
   ElButton, ElPopover, ElMenu, ElMenuItem, ElDivider,
   ElSwitch, ElImage, ElPopconfirm,
   ElInput, ElSelect, ElOption,
+  ElCarousel, ElCarouselItem,
 } from 'element-plus'
 
 import './element-variables.scss'
 
-const elementComponents = [ElButton, ElPopover, ElMenu, ElMenuItem, ElDivider, ElSwitch, ElImage, ElPopconfirm, ElInput, ElSelect, ElOption]
+const elementComponents = [ElButton, ElPopover, ElMenu, ElMenuItem, ElDivider, ElSwitch, ElImage, ElPopconfirm, ElInput, ElSelect, ElOption, ElCarousel, ElCarouselItem]
 
 export default function initElement (app) {
   app.config.globalProperties.$ELEMENT = {
