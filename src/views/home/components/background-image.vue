@@ -10,7 +10,7 @@ import { onMounted, onUnmounted, ref } from 'vue'
 import ThemeApi from '@/api/module/theme-api'
 import { useStore } from 'vuex'
 import { randomInt } from '@/utils'
-import { HomeEventBus, urlFormat } from '@/views/home/hooks'
+import { HomeEventBus, urlFormat } from '@/views/hooks'
 
 const themeApi = new ThemeApi()
 

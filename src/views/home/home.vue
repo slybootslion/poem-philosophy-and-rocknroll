@@ -19,7 +19,7 @@
 import HomeFooter from '@/views/home/components/home-footer'
 import ClockComp from '@/views/home/components/clock-comp'
 import BackgroundImage from '@/views/home/components/background-image'
-import { clock, HomeEventBus, hotKeyJs } from '@/views/home/hooks'
+import { clock, HomeEventBus, hotKeyJs } from '@/views/hooks'
 import HomeSetting from '@/views/home/components/home-setting/index'
 import SearchBoard from '@/views/home/components/search-board'
 import LinkBoard from '@/views/home/components/link-board'

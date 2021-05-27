@@ -12,19 +12,21 @@
                    trigger="click">
         <el-carousel-item v-for="(card, index) in list"
                           :key="index">
-          <div v-for="item in card"
-               :key="item.id">
-            <link-board-item :detail="item" />
-          </div>
+          <link-board-item v-for="item in card"
+                           :key="item.id"
+                           :detail="item" />
         </el-carousel-item>
       </el-carousel>
     </div>
+    <div class="iconfont icon-settings" v-if="getters.isLogin" @click="goSetting" />
   </div>
 </template>
 
 <script>
 import { onMounted, ref } from 'vue'
-import { HomeEventBus } from '@/views/home/hooks'
+import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
+import { HomeEventBus } from '@/views/hooks'
 import LinkApi from '@/api/module/link-api'
 import LinkBoardItem from '@/views/home/components/link-board/link-item'
 
@@ -36,21 +38,22 @@ export default {
   setup () {
     const isShow = ref(false)
     const toggleShow = () => isShow.value = !isShow.value
-    const limit = 2
+    const limit = 15
     const list = ref([])
     const carousel = ref(null)
+    const router = useRouter()
+    const store = useStore()
+
     HomeEventBus.on('toggleLinkBoard', toggleShow)
 
     const getLink = async () => {
       const result = await linkApi.getLinkList()
       const res = result.map(item => {
-        // const reg = /http(s)?:\/\/(([\w-]+\.)+\w+(:\d{1,5})?)/
-        // const r = reg.match(item)
-        // console.log(r)
-        item.icoUrl = item.link.split('')[1]
+        const reg = /(\w+):\/\/([^/:]+)(:\d*)?/
+        const r = reg.exec(item.link)
+        item.icoUrl = r[2]
         return item
       })
-      console.log(res)
       let c = 0
       const arr = []
       for (let i = 0; i < res.length; i++) {
@@ -64,6 +67,11 @@ export default {
         c++
       }
       list.value.push(arr)
+      store.dispatch('link/setLinkShowListAction', list.value)
+    }
+
+    const goSetting = () => {
+      router.push({ name: 'LinkSetting' })
     }
 
     onMounted(async () => {
@@ -75,6 +83,8 @@ export default {
       isShow,
       list,
       carousel,
+      goSetting,
+      getters: store.getters,
     }
   },
 }
@@ -91,14 +101,29 @@ export default {
       height: 100%;
 
       :deep(.el-carousel__container) {
+
         .el-carousel__item {
           padding: p2r(20);
           box-sizing: border-box;
           display: flex;
           flex-wrap: wrap;
           justify-content: flex-start;
+          align-content: flex-start;
         }
       }
+    }
+  }
+
+  .icon-settings {
+    position: absolute;
+    font-size: p2r(28);
+    bottom: p2r(20);
+    left: p2r(20);
+    cursor: pointer;
+    color: $color-info;
+
+    &:hover {
+      color: #fff;
     }
   }
 }

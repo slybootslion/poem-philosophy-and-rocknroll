@@ -24,7 +24,7 @@ import { ref } from 'vue'
 import { useStore } from 'vuex'
 import { baseOssURL } from '@/config/setting'
 import { showMessage } from '@/utils'
-import { HomeEventBus, urlFormat } from '@/views/home/hooks'
+import { HomeEventBus, urlFormat } from '@/views/hooks'
 
 const themeApi = new ThemeApi()
 

@@ -30,7 +30,7 @@ import { useStore } from 'vuex'
 import PublicApi from '@/api/module/public-api'
 import { showMessage, storageCache, TimerSimulateInterval } from '@/utils'
 import HomeSettingItem from '@/views/home/components/home-setting/setting-item'
-import { HomeEventBus } from '@/views/home/hooks'
+import { HomeEventBus } from '@/views/hooks'
 
 const publicApi = new PublicApi()
 

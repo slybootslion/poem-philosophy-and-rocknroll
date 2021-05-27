@@ -41,7 +41,7 @@
 
 <script>
 import { reactive, ref, watch } from 'vue'
-import { HomeEventBus } from '@/views/home/hooks'
+import { HomeEventBus } from '@/views/hooks'
 import SearchApi from '@/api/module/search-api'
 import { debounce } from 'lodash'
 import { checkRegCN, checkRegEN, storageCache } from '@/utils'

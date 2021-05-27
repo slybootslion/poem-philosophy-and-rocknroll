@@ -5,15 +5,23 @@ const routes = [
     path: '/',
     name: 'Home',
     meta: {
-      title: '诗歌、哲学与摇滚乐 | 最好的起始页网站',
+      title: '最好的起始页网站',
     },
     component: () => import(/* webpackChunkName: "home" */ '@/views/home/home'),
+  },
+  {
+    path: '/link-setting',
+    name: 'LinkSetting',
+    meta: {
+      title: '链接设置',
+    },
+    component: () => import(/* webpackChunkName: "link-setting" */ '@/views/link-setting/link-setting'),
   },
   {
     path: '/about',
     name: 'About',
     meta: {
-      title: '诗歌、哲学与摇滚乐 | 关于',
+      title: '关于',
     },
     component: () => import(/* webpackChunkName: "about" */ '@/views/about/about'),
   },
@@ -25,7 +33,7 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from) => {
-  document.title = to.meta.title
+  document.title = `诗歌、哲学与摇滚乐 | ${to.meta.title}`
 })
 
 export default router

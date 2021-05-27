@@ -10,6 +10,12 @@ class LinkApi {
       url: `${this.prefix}`,
     })
   }
+
+  getAllList () {
+    return http({
+      url: `${this.prefix}/all`,
+    })
+  }
 }
 
 export default LinkApi

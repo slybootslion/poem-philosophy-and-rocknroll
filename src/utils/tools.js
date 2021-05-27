@@ -74,3 +74,12 @@ export function checkRegEN (str) {
 export function checkRegNum (str) {
   return /^\d+$/.test(str)
 }
+
+export function waitTime (interval = 500) {
+  return new Promise(resolve => {
+    const timer = setTimeout(_ => {
+      clearTimeout(timer)
+      resolve()
+    }, interval)
+  })
+}
