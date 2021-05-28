@@ -57,7 +57,7 @@ export default {
 </script>
 
 <style lang="scss" rel="stylesheet/scss" scoped>
-@import "./components/var";
+@import "../hooks/var";
 
 .home-container {
   height: 100%;

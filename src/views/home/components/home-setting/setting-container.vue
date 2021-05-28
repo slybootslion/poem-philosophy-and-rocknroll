@@ -21,7 +21,7 @@ export default {
 </script>
 
 <style lang="scss" rel="stylesheet/scss" scoped>
-@import "../var";
+@import "../../../hooks/var";
 
 .setting-container {
   box-sizing: border-box;

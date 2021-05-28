@@ -41,3 +41,10 @@ export async function urlFormat (list, store) {
 export async function hotKeyJs (hotkey, fn) {
   hotkeys(hotkey, fn)
 }
+
+export function formatIconUrl (item) {
+  const reg = /(\w+):\/\/([^/:]+)(:\d*)?/
+  const r = reg.exec(item.link)
+  item.icoUrl = r[2]
+  return item
+}

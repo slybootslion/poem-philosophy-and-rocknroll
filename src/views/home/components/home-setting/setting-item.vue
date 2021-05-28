@@ -28,7 +28,7 @@ export default {
 </script>
 
 <style lang="scss" rel="stylesheet/scss" scoped>
-@import "../var";
+@import "../../../hooks/var";
 
 .item-container {
   width: 100%;

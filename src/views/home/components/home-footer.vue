@@ -49,7 +49,7 @@ export default {
 </script>
 
 <style lang="scss" rel="stylesheet/scss" scoped>
-@import "var";
+@import "../../hooks/var";
 
 .footer-box {
   height: p2r(30);

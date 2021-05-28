@@ -84,7 +84,7 @@ export default {
 </script>
 
 <style lang="scss" rel="stylesheet/scss" scoped>
-@import '../var';
+@import '../../../hooks/var';
 
 .theme-content {
   padding: 10px;

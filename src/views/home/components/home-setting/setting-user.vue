@@ -110,7 +110,7 @@ export default {
 </script>
 
 <style lang="scss" rel="stylesheet/scss" scoped>
-@import "../var.scss";
+@import "../../../hooks/var";
 
 .qr-code {
   width: 100%;

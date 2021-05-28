@@ -193,7 +193,7 @@ export default {
 </script>
 
 <style lang="scss" rel="stylesheet/scss" scoped>
-@import '../var';
+@import '../../../hooks/var';
 
 .search-container {
   .input-box {

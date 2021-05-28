@@ -26,7 +26,7 @@
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
-import { HomeEventBus } from '@/views/hooks'
+import { formatIconUrl, HomeEventBus } from '@/views/hooks'
 import LinkApi from '@/api/module/link-api'
 import LinkBoardItem from '@/views/home/components/link-board/link-item'
 
@@ -49,11 +49,9 @@ export default {
     const getLink = async () => {
       const result = await linkApi.getLinkList()
       const res = result.map(item => {
-        const reg = /(\w+):\/\/([^/:]+)(:\d*)?/
-        const r = reg.exec(item.link)
-        item.icoUrl = r[2]
-        return item
+        return formatIconUrl(item)
       })
+
       let c = 0
       const arr = []
       for (let i = 0; i < res.length; i++) {
@@ -91,11 +89,12 @@ export default {
 </script>
 
 <style lang="scss" rel="stylesheet/scss" scoped>
-@import "../var";
+@import "../../../hooks/var";
+
 .link-container {
   .link-box {
-    width: 50%;
-    height: 80%;
+    width: 682px;
+    height: 613px;
 
     .el-carousel {
       height: 100%;
