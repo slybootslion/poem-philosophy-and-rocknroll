@@ -2,11 +2,20 @@
   <div class="link-setting-container">
     <span class="iconfont icon-home" @click="backHome"></span>
     <div class="lint-container">
-      <div class="link-content">
-        <link-item v-for="link in list"
-                   :key="link.id"
-                   :link="link"
-                   @click="itemOut(link.id)" />
+      <div class="user-container">
+        <div class="link-content"
+             v-for="(item, index) in groupList"
+             :key="index">
+          <link-item v-for="link in item"
+                     :key="link.id"
+                     :link="link"
+                     ref="userLinkNodes"
+                     @closeItem="itemOut"
+                     @MouseDown="mousedown"
+                     @MouseUp="mouseup"
+                     @MouseMove="mousemove"
+                     :isUser="true" />
+        </div>
       </div>
       <div class="all-link-content">
         <link-item v-for="link in allList"
@@ -19,13 +28,14 @@
 </template>
 
 <script>
-import { onMounted, ref, computed } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import { waitTime } from '@/utils'
 import LinkApi from '@/api/module/link-api'
 import LinkItem from '@/views/link-setting/components/link-item'
-import { formatIconUrl } from '@/views/hooks'
+import { formatIconUrl, formatLinkGroup } from '@/views/hooks'
+import { mousedown, mouseup, mousemove } from './index'
 
 const linkApi = new LinkApi()
 
@@ -38,13 +48,23 @@ export default {
     const store = useStore()
     const router = useRouter()
     const count = ref(0)
+    const userLinkNodes = ref(null)
 
     const listIds = computed(() => list.value.map(l => l.id))
+
+    const groupList = computed(() => formatLinkGroup(list.value, 15))
 
     const computedLinks = allLink => {
       allList.value = allLink.filter(item => {
         if (listIds.value && !listIds.value.includes(item.id)) return formatIconUrl(item)
       })
+    }
+
+    const updateUserLinks = async () => {
+      const res = await linkApi.putUserLink({ ids: listIds.value })
+      if (res.id) {
+        await store.dispatch('link/setLinkShowListAction', groupList)
+      }
     }
 
     onMounted(async () => {
@@ -63,12 +83,14 @@ export default {
       const item = allList.value.find(link => link.id === id)
       allList.value = allList.value.filter(link => link.id !== id)
       list.value.push(item)
+      updateUserLinks()
     }
 
     const itemOut = id => {
       const item = list.value.find(link => link.id === id)
       list.value = list.value.filter(link => link.id !== id)
       allList.value.push(item)
+      updateUserLinks()
     }
 
     return {
@@ -78,6 +100,11 @@ export default {
       backHome,
       itemIn,
       itemOut,
+      groupList,
+      userLinkNodes,
+      mousedown,
+      mouseup,
+      mousemove,
     }
   },
 }
@@ -109,8 +136,15 @@ export default {
   .lint-container {
     display: flex;
 
-    .link-content {
-      width: 450px;
+    .user-container {
+      position: relative;
+
+      .link-content {
+        width: 450px;
+        margin-bottom: p2r(20);
+        border-bottom: p2r(1) solid rgba(255, 255, 255, .3);
+        overflow: hidden;
+      }
     }
 
     .all-link-content {

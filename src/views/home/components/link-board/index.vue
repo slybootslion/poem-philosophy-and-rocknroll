@@ -23,10 +23,10 @@
 </template>
 
 <script>
-import { onMounted, ref } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
-import { formatIconUrl, HomeEventBus } from '@/views/hooks'
+import { formatIconUrl, formatLinkGroup, HomeEventBus } from '@/views/hooks'
 import LinkApi from '@/api/module/link-api'
 import LinkBoardItem from '@/views/home/components/link-board/link-item'
 
@@ -38,44 +38,27 @@ export default {
   setup () {
     const isShow = ref(false)
     const toggleShow = () => isShow.value = !isShow.value
-    const limit = 15
     const list = ref([])
     const carousel = ref(null)
     const router = useRouter()
     const store = useStore()
 
-    HomeEventBus.on('toggleLinkBoard', toggleShow)
-
     const getLink = async () => {
       const result = await linkApi.getLinkList()
-      const res = result.map(item => {
-        return formatIconUrl(item)
-      })
-
-      let c = 0
-      const arr = []
-      for (let i = 0; i < res.length; i++) {
-        if (c >= limit) {
-          const temp = [...arr]
-          list.value.push(temp)
-          c = 0
-          arr.length = 0
-        }
-        arr.push(res[i])
-        c++
-      }
-      list.value.push(arr)
+      const res = result.map(item => formatIconUrl(item))
+      list.value = formatLinkGroup(res)
       store.dispatch('link/setLinkShowListAction', list.value)
     }
 
-    const goSetting = () => {
-      router.push({ name: 'LinkSetting' })
-    }
+    const goSetting = () => router.push({ name: 'LinkSetting' })
 
     onMounted(async () => {
       await getLink()
       carousel.value.setActiveItem(0)
+      HomeEventBus.on('toggleLinkBoard', toggleShow)
     })
+
+    onUnmounted(() => HomeEventBus.off('toggleLinkBoard', toggleShow))
 
     return {
       isShow,

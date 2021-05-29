@@ -1,6 +1,5 @@
 import dayjs from 'dayjs'
 import mitt from 'mitt'
-import hotkeys from 'hotkeys-js'
 import { baseOssURL } from '@/config/setting'
 
 const dayDict = {
@@ -38,13 +37,29 @@ export async function urlFormat (list, store) {
   return list
 }
 
-export async function hotKeyJs (hotkey, fn) {
-  hotkeys(hotkey, fn)
-}
-
 export function formatIconUrl (item) {
   const reg = /(\w+):\/\/([^/:]+)(:\d*)?/
   const r = reg.exec(item.link)
   item.icoUrl = r[2]
   return item
+}
+
+export function formatLinkGroup (list, groupLimit = 15) {
+  const arr = []
+  let c = 0
+  let temp = []
+  for (let i = 0; i < list.length; i++) {
+    const item = list[i]
+    if (c >= groupLimit) {
+      arr.push([...temp])
+      temp = []
+      c = 0
+      temp.length = []
+    }
+
+    temp.push(item)
+    c++
+  }
+  arr.push(temp)
+  return arr
 }

@@ -16,6 +16,14 @@ class LinkApi {
       url: `${this.prefix}/all`,
     })
   }
+
+  putUserLink (data) {
+    return http({
+      url: `${this.prefix}/user-link`,
+      method: 'put',
+      data,
+    })
+  }
 }
 
 export default LinkApi

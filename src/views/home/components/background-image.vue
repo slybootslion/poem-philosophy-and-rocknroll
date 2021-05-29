@@ -75,7 +75,6 @@ export default {
         timer = setTimeout(() => changeImg(list), changeBgTime)
         return index
       }
-
       selectIndex()
     }
 

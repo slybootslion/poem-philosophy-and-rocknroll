@@ -124,6 +124,7 @@ function handleServerActiveException (code, message, res) {
         logout()
         showMessage(token)
         reject(message)
+        location.reload()
         return
       }
       const { config } = res

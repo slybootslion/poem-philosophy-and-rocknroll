@@ -19,10 +19,11 @@
 import HomeFooter from '@/views/home/components/home-footer'
 import ClockComp from '@/views/home/components/clock-comp'
 import BackgroundImage from '@/views/home/components/background-image'
-import { clock, HomeEventBus, hotKeyJs } from '@/views/hooks'
+import { clock } from '@/views/hooks'
 import HomeSetting from '@/views/home/components/home-setting/index'
 import SearchBoard from '@/views/home/components/search-board'
 import LinkBoard from '@/views/home/components/link-board'
+import { onLink, onSearch } from '@/plugins/initHotkeys'
 
 export default {
   name: 'home',
@@ -37,20 +38,13 @@ export default {
   setup () {
     const initTime = clock()
 
-    const onSearch = () => HomeEventBus.emit('toggleSearchBoard', true)
-
-    const onLink = () => HomeEventBus.emit('toggleLinkBoard')
-
-    const initHotkey = () => {
-      hotKeyJs('alt+q', onSearch)
-      hotKeyJs('alt+l', onLink)
-    }
-    initHotkey()
+    onLink()
+    onSearch()
 
     return {
       initTime,
-      onSearch,
       onLink,
+      onSearch,
     }
   },
 }
@@ -72,6 +66,7 @@ export default {
     width: 100%;
     height: 100%;
     position: relative;
+    overflow: hidden;
 
     .search-icon-box {
       position: absolute;

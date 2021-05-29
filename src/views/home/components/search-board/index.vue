@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import { reactive, ref, watch } from 'vue'
+import { reactive, ref, watch, onMounted, onUnmounted } from 'vue'
 import { HomeEventBus } from '@/views/hooks'
 import SearchApi from '@/api/module/search-api'
 import { debounce } from 'lodash'
@@ -74,10 +74,12 @@ export default {
 
     const toggleShow = state => {
       isShow.value = state
-      if (isShow.value) {
-        searchInput.value.focus()
-      }
+      if (isShow.value) searchInput.value.focus()
     }
+
+    onMounted(() => HomeEventBus.on('toggleSearchBoard', toggleShow))
+
+    onUnmounted(() => HomeEventBus.off('toggleSearchBoard', toggleShow))
 
     const handlerEsc = e => {
       searchInput.value.blur()
@@ -174,8 +176,6 @@ export default {
       resultFlag = true
       searchData.searchText = ''
     }
-
-    HomeEventBus.on('toggleSearchBoard', toggleShow)
 
     return {
       isShow,
