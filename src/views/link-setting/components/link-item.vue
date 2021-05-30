@@ -1,5 +1,5 @@
 <template>
-  <div class="link-item" ref="itemDom">
+  <div class="link-item" :class="link.isCopy ? 'isCopy' : ''" ref="itemDom">
     <div class="icon-favicon" ref="iconEl">
       <img class="icon-img"
            :src="`https://icons.duckduckgo.com/ip2/${link.icoUrl}.ico`">
@@ -40,8 +40,7 @@ export default {
     }
 
     const mousedown = e => {
-      const el = itemDom.value
-      context.emit('MouseDown', el)
+      context.emit('MouseDown', itemDom, e, props.link)
     }
 
     const mouseup = e => {
@@ -76,6 +75,11 @@ export default {
   float: left;
   transition: all .3s;
   margin-bottom: 5px;
+  user-select: none;
+
+  &.isCopy {
+    opacity: .5;
+  }
 
   &:hover {
     .icon-favicon {

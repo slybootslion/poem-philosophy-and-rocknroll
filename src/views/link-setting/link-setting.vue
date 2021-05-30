@@ -11,9 +11,9 @@
                      :link="link"
                      ref="userLinkNodes"
                      @closeItem="itemOut"
-                     @MouseDown="mousedown"
-                     @MouseUp="mouseup"
-                     @MouseMove="mousemove"
+                     @MouseDown="Down"
+                     @MouseUp.stop="up"
+                     @MouseMove.stop="move"
                      :isUser="true" />
         </div>
       </div>
@@ -31,11 +31,11 @@
 import { computed, onMounted, ref } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
-import { waitTime } from '@/utils'
+import { showMessage, waitTime } from '@/utils'
 import LinkApi from '@/api/module/link-api'
 import LinkItem from '@/views/link-setting/components/link-item'
 import { formatIconUrl, formatLinkGroup } from '@/views/hooks'
-import { mousedown, mouseup, mousemove } from './index'
+import { down, up, move, updateUserLinks } from './mouse-methods'
 
 const linkApi = new LinkApi()
 
@@ -60,15 +60,11 @@ export default {
       })
     }
 
-    const updateUserLinks = async () => {
-      const res = await linkApi.putUserLink({ ids: listIds.value })
-      if (res.id) {
-        await store.dispatch('link/setLinkShowListAction', groupList)
-      }
-    }
-
     onMounted(async () => {
-      const { count: total, rows: allLink } = await linkApi.getAllList()
+      const {
+        count: total,
+        rows: allLink,
+      } = await linkApi.getAllList()
       count.value = total
       computedLinks(allLink)
       await waitTime(1200)
@@ -80,17 +76,32 @@ export default {
     list.value = store.state.link.linkShowList.flat(Infinity)
 
     const itemIn = id => {
+      if (list.value.length > 45) {
+        showMessage('最多添加45个链接')
+        return
+      }
       const item = allList.value.find(link => link.id === id)
       allList.value = allList.value.filter(link => link.id !== id)
       list.value.push(item)
-      updateUserLinks()
+      updateUserLinks(listIds.value, list, store)
     }
 
     const itemOut = id => {
+      if (list.value.length < 2) {
+        showMessage('需至少保留一个链接')
+        return
+      }
       const item = list.value.find(link => link.id === id)
       list.value = list.value.filter(link => link.id !== id)
       allList.value.push(item)
-      updateUserLinks()
+      updateUserLinks(listIds.value, list, store)
+    }
+
+    const Down = (itemDom, e, link) => {
+      const el = itemDom.value
+      const startX = e.clientX
+      const startY = e.clientY
+      down(el, startX, startY, list, link, store)
     }
 
     return {
@@ -102,9 +113,9 @@ export default {
       itemOut,
       groupList,
       userLinkNodes,
-      mousedown,
-      mouseup,
-      mousemove,
+      Down,
+      up,
+      move,
     }
   },
 }
@@ -134,9 +145,11 @@ export default {
   }
 
   .lint-container {
+    height: 100%;
     display: flex;
 
     .user-container {
+      overflow-y: auto;
       position: relative;
 
       .link-content {
