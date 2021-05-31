@@ -3,6 +3,7 @@
        :class="store.getters.isNight ? 'night' : ''">
     <div class="time-box">
       {{ clockData.time || initTime.time }}
+      <span class="iconfont icon-time" @click="timeBoxClick"></span>
     </div>
     <div class="date-box">
       {{ clockData.date || initTime.date }} {{ clockData.day || initTime.day }}
@@ -50,10 +51,22 @@ export default {
     onUnmounted(() => { timerSi.simulateClearInterval() })
     // simulateInterval(computedClock, 1000)
 
+    const timeBoxClick = () => {
+      console.log('in timeBoxClick')
+      Notification.requestPermission(function (status) {
+        console.log(status) // 仅当值为 "granted" 时显示通知
+        var n = new Notification('title', { body: 'notification body' }) // 显示通知
+        n.onshow = function () {
+          console.log('in in in')
+        }
+      })
+    }
+
     return {
       clockData,
       clock,
       store,
+      timeBoxClick,
     }
   },
 }
@@ -78,10 +91,32 @@ export default {
 
   .time-box {
     font-size: p2r(140);
+    position: relative;
+    padding: 0 p2r(30);
+
+    &:hover{
+      .icon-time {
+        opacity: .5;
+      }
+    }
+
+    .icon-time {
+      position: absolute;
+      font-size: p2r(28);
+      opacity: .0;
+      cursor: pointer;
+      top: p2r(10);
+      right: p2r(10);
+
+      &:hover{
+        opacity: 1;
+      }
+    }
   }
 
   .date-box {
     font-size: p2r(36);
+    position: relative;
   }
 }
 </style>
