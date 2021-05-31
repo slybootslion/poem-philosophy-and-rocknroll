@@ -48,8 +48,7 @@ export default {
 
     const timerSi = new TimerSimulateInterval()
     timerSi.simulateInterval(computedClock, 1000)
-    onUnmounted(() => { timerSi.simulateClearInterval() })
-    // simulateInterval(computedClock, 1000)
+    onUnmounted(() => timerSi.simulateClearInterval())
 
     return {
       clockData,
