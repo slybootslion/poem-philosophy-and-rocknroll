@@ -17,8 +17,12 @@
                            :detail="item" />
         </el-carousel-item>
       </el-carousel>
+      <link-search @linkSearch="handleLinkSearch"
+                   @clearSearch="handleClearSearch" />
     </div>
-    <div class="iconfont icon-settings" v-if="getters.isLogin" @click="goSetting" />
+    <div class="iconfont icon-settings"
+         v-if="getters.isLogin"
+         @click="goSetting" />
   </div>
 </template>
 
@@ -29,23 +33,25 @@ import { useStore } from 'vuex'
 import { formatIconUrl, formatLinkGroup, HomeEventBus } from '@/views/hooks'
 import LinkApi from '@/api/module/link-api'
 import LinkBoardItem from '@/views/home/components/link-board/link-item'
+import LinkSearch from '@/views/home/components/link-board/link-search'
 
 const linkApi = new LinkApi()
 
 export default {
   name: 'linkBoard',
-  components: { LinkBoardItem },
+  components: { LinkSearch, LinkBoardItem },
   setup () {
     const isShow = ref(false)
     const toggleShow = () => isShow.value = !isShow.value
     const list = ref([])
+    let originList = []
     const carousel = ref(null)
     const router = useRouter()
     const store = useStore()
 
     const getLink = async () => {
-      const result = await linkApi.getLinkList()
-      const res = result.map(item => formatIconUrl(item))
+      originList = await linkApi.getLinkList()
+      const res = originList.map(item => formatIconUrl(item))
       list.value = formatLinkGroup(res)
       store.dispatch('link/setLinkShowListAction', list.value)
     }
@@ -60,12 +66,31 @@ export default {
 
     onUnmounted(() => HomeEventBus.off('toggleLinkBoard', toggleShow))
 
+    const handleClearSearch = () => {
+      list.value = formatLinkGroup(originList)
+    }
+
+    const handleLinkSearch = str => {
+      str = str.trim()
+      if (!str) {
+        handleClearSearch()
+        return
+      }
+      const filterList = originList.filter(l => {
+        const { link, title, shortTitle } = l
+        if (link.includes(str) || title.includes(str) || shortTitle.includes(str)) return l
+      })
+      list.value = formatLinkGroup(filterList)
+    }
+
     return {
       isShow,
       list,
       carousel,
       goSetting,
       getters: store.getters,
+      handleLinkSearch,
+      handleClearSearch,
     }
   },
 }

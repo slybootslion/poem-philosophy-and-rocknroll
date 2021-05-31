@@ -76,8 +76,8 @@ export default {
     list.value = store.state.link.linkShowList.flat(Infinity)
 
     const itemIn = id => {
-      if (list.value.length > 45) {
-        showMessage('最多添加45个链接')
+      if (list.value.length > 60) {
+        showMessage('最多添加60个链接')
         return
       }
       const item = allList.value.find(link => link.id === id)
