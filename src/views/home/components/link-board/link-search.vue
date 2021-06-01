@@ -1,8 +1,10 @@
 <template>
   <div class="centerX search-box">
     <input type="text"
+           ref="inputDom"
            class="search-input"
            @input="searchInput"
+           @keyup.esc="escEvent"
            v-model="t" />
     <span class="iconfont icon-close"
           @click="clearSearch"></span>
@@ -12,11 +14,13 @@
 <script>
 import { ref } from 'vue'
 import { debounce } from 'lodash'
+import { HomeEventBus } from '@/views/hooks'
 
 export default {
   name: 'link-search',
   setup (_, context) {
     const t = ref('')
+    const inputDom = ref(null)
 
     const searchInput = debounce(() => context.emit('linkSearch', t.value), 500)
 
@@ -25,10 +29,17 @@ export default {
       context.emit('clearSearch')
     }
 
+    const escEvent = () => {
+      inputDom.value.blur()
+      HomeEventBus.emit('toggleLinkBoard')
+    }
+
     return {
       t,
       searchInput,
       clearSearch,
+      escEvent,
+      inputDom,
     }
   },
 }
