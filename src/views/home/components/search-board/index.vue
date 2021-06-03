@@ -70,7 +70,6 @@ export default {
     })
     let activeIndex = -1
     let isCNFlag = null
-    let resultFlag = false
 
     const toggleShow = state => {
       isShow.value = state
@@ -112,10 +111,6 @@ export default {
     const handlerInput = debounce(async str => {
       str = str.trim()
       if (!str) return
-      if (resultFlag) {
-        resultFlag = false
-        return
-      }
 
       const isEN = checkRegEN(searchData.searchText)
       const isCN = checkRegCN(searchData.searchText)
@@ -173,7 +168,6 @@ export default {
 
       window.open(`${searchData.searchUrl[searchData.searchType]}${searchData.searchText}`)
       storageCache.unshiftSearchHistoryItem(searchData.searchText)
-      resultFlag = true
       searchData.searchText = ''
     }
 
