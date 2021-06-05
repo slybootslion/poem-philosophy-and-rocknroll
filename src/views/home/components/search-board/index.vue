@@ -152,6 +152,12 @@ export default {
 
     const searchTypeChange = type => searchData.searchType = type
 
+    const reset = () => {
+      searchData.searchText = ''
+      activeIndex = -1
+      searchData.searchResult.length = 0
+    }
+
     const submit = async item => {
       if (!(item instanceof KeyboardEvent)) {
         searchData.searchText = item.text
@@ -168,7 +174,7 @@ export default {
 
       window.open(`${searchData.searchUrl[searchData.searchType]}${searchData.searchText}`)
       storageCache.unshiftSearchHistoryItem(searchData.searchText)
-      searchData.searchText = ''
+      reset()
     }
 
     return {
