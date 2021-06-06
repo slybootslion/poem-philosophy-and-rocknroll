@@ -2,7 +2,7 @@
   <div class="link-item" @click="go">
     <div class="icon-favicon" ref="iconEl">
       <img class="icon-img"
-           :src="`https://icons.duckduckgo.com/ip2/${detail.icoUrl}.ico`">
+           :src="src">
     </div>
     <span class="link-item-title">
       {{ detail.shortTitle || detail.title }}
@@ -12,6 +12,8 @@
 
 <script>
 
+import { computed } from 'vue'
+
 export default {
   name: 'linkBoardItem',
   props: {
@@ -20,11 +22,20 @@ export default {
     },
   },
   setup (props) {
+    const src = computed(() => {
+      if (props.detail.iconLink) {
+        return props.detail.iconLink
+      } else {
+        return `https://icons.duckduckgo.com/ip2/${props.detail.icoUrl}.ico`
+      }
+    })
+
     const go = () => {
       window.open(props.detail.link)
     }
 
     return {
+      src,
       go,
     }
   },

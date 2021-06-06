@@ -119,6 +119,7 @@ export default {
       if (isCNFlag != null) searchData.searchResult = [{ type: 1, text: searchData.searchText }]
 
       let historyArr = storageCache.getSearchHistory()
+      if (!searchData.searchText) return
       if (historyArr) {
         historyArr = historyArr.filter(item => item.startsWith(searchData.searchText)).slice(0, 3).map(item => ({
           type: 2, text: item,
@@ -128,6 +129,7 @@ export default {
       searchData.searchResult.concat(historyArr)
 
       const res = await searchApi.getHotKeyByBing(encodeURI(str))
+      if (!searchData.searchText) return
       const bingResult = res.map(r => ({ text: r, type: 3 }))
       handleResultData(bingResult)
     }, 500)
