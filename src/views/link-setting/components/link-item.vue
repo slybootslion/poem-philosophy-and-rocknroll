@@ -33,9 +33,6 @@ export default {
   },
   setup (props, context) {
     const itemDom = ref(null)
-
-    console.log(props.link)
-
     const src = computed(() => {
       if (props.link.iconLink) {
         return props.link.iconLink
