@@ -2,7 +2,7 @@
   <div class="link-item" :class="link.isCopy ? 'isCopy' : ''" ref="itemDom">
     <div class="icon-favicon" ref="iconEl">
       <img class="icon-img"
-           :src="`https://icons.duckduckgo.com/ip2/${link.icoUrl}.ico`">
+           :src="src">
     </div>
     <span class="link-item-title"
           @mousedown="mousedown"
@@ -18,7 +18,7 @@
 
 <script>
 
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
 export default {
   name: 'link-item',
@@ -33,6 +33,16 @@ export default {
   },
   setup (props, context) {
     const itemDom = ref(null)
+
+    console.log(props.link)
+
+    const src = computed(() => {
+      if (props.link.iconLink) {
+        return props.link.iconLink
+      } else {
+        return `https://icons.duckduckgo.com/ip2/${props.link.icoUrl}.ico`
+      }
+    })
 
     const closeItem = () => {
       const id = props.link.id
@@ -57,6 +67,7 @@ export default {
       mousedown,
       mouseup,
       mousemove,
+      src,
     }
   },
 }
