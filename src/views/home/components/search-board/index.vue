@@ -165,11 +165,13 @@ export default {
         searchData.searchText = item.text
         if (item.type === 1) {
           translationSubmit()
+          reset()
           return
         }
       } else {
         if (activeIndex === 0) {
           translationSubmit()
+          reset()
           return
         }
       }
