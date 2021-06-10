@@ -94,7 +94,6 @@ export default {
     watch(() => {
       return store.getters.changeBgTimeGetter
     }, value => {
-      console.log(value, 'bg')
       changeBgTime = dict[value]
       if (changeBgTime === 0) {
         clearTimeout(timer)
@@ -104,7 +103,6 @@ export default {
         clearTimeout(timer)
         timer = null
       }
-      // console.log(changeBgTime)
       picHandle()
     })
 
