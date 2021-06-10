@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import { onMounted, onUnmounted, ref } from 'vue'
+import { onMounted, onUnmounted, ref, watch } from 'vue'
 import ThemeApi from '@/api/module/theme-api'
 import { useStore } from 'vuex'
 import { randomInt } from '@/utils'
@@ -14,12 +14,21 @@ import { HomeEventBus, urlFormat } from '@/views/hooks'
 
 const themeApi = new ThemeApi()
 
+const dict = {
+  1: 60 * 60 * 0.5 * 1000,
+  2: 60 * 60 * 1000,
+  3: 60 * 60 * 3 * 1000,
+  4: 60 * 60 * 6 * 1000,
+  5: 60 * 60 * 12 * 1000,
+  6: 0,
+}
+
 export default {
   name: 'backgroundImage',
   setup () {
     const url = ref('https://static.uniformfox.com/static/pic/ppr/bg/1.jpg')
     const store = useStore()
-    const changeBgTime = 60 * 60 * 3 * 1000
+    let changeBgTime = dict[store.state.theme.changeBgTime]
     // const changeBgTime = 5 * 1000
     let timer = null
 
@@ -72,11 +81,32 @@ export default {
           clearTimeout(timer)
           timer = null
         }
+        if (changeBgTime === 0) {
+          timer && clearTimeout(timer)
+          return
+        }
         timer = setTimeout(() => changeImg(list), changeBgTime)
         return index
       }
       selectIndex()
     }
+
+    watch(() => {
+      return store.getters.changeBgTimeGetter
+    }, value => {
+      console.log(value, 'bg')
+      changeBgTime = dict[value]
+      if (changeBgTime === 0) {
+        clearTimeout(timer)
+        return
+      }
+      if (timer) {
+        clearTimeout(timer)
+        timer = null
+      }
+      // console.log(changeBgTime)
+      picHandle()
+    })
 
     const getNetList = async () => {
       try {

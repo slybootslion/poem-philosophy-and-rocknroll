@@ -100,9 +100,9 @@ instanceAxios.interceptors.response.use(response => {
   // 主动错误处理
   return handleServerActiveException(code, message, response)
 }, error => {
+  if (error.message === '取消重复请求') return Promise.reject(error)
   // 服务器非主动异常
   // 没有返回错误内容
-  if (error.message === '取消重复请求') return Promise.reject(error)
   if (!error.response) {
     showMessage('服务器错误')
   } else if (error.code === 'ECONNABORTED' && error.message.indexOf('timeout') !== -1) {

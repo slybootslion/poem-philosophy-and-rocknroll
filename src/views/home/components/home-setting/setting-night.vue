@@ -17,13 +17,25 @@
       <el-switch v-model="isFullScreen" @change="fullScreen" />
     </home-setting-item>
   </home-setting-container>
+  <home-setting-container title="主题切换时间" desc="切换主题的间隔，每次设置将重新计算时间">
+    <home-setting-item text="选择">
+      <el-radio-group v-model="timeRadio" size="mini">
+        <el-radio-button :label="1">30分钟</el-radio-button>
+        <el-radio-button :label="2">1小时</el-radio-button>
+        <el-radio-button :label="3">3小时</el-radio-button>
+        <el-radio-button :label="4">6小时</el-radio-button>
+        <el-radio-button :label="5">12小时</el-radio-button>
+        <el-radio-button :label="6">不切换</el-radio-button>
+      </el-radio-group>
+    </home-setting-item>
+  </home-setting-container>
 </template>
 
 <script>
 import HomeSettingContainer from './setting-container'
 import HomeSettingItem from './setting-item'
 import { useStore } from 'vuex'
-import { ref } from 'vue'
+import { watch, ref } from 'vue'
 
 export default {
   name: 'home-setting-night-model',
@@ -33,6 +45,12 @@ export default {
   },
   setup () {
     const store = useStore()
+    const initRadio = store.state.theme.changeBgTime
+    const timeRadio = ref(initRadio)
+
+    watch(() => timeRadio.value, value => store.dispatch('theme/setChangeBgTimeAction', value))
+
+    const timeRadioList = []
     const autoNightModelChange = async status => {
       await store.dispatch('sys/setAutoNightAction', status)
       await store.dispatch('sys/setNightAction', store.getters.isNight)
@@ -57,12 +75,18 @@ export default {
       toggleFullScreen()
     }
 
+    /*    const timeRadioHandle = value => {
+          store.dispatch('theme/setChangeBgTimeAction', value)
+        } */
+
     return {
       getters: store.getters,
       autoNightModelChange,
       nightModelChange,
       fullScreen,
       isFullScreen,
+      timeRadio,
+      timeRadioList,
     }
   },
 }
