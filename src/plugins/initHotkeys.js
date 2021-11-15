@@ -5,9 +5,15 @@ function hotKeyJs (hotkey, fn) {
   hotkeys(hotkey, fn)
 }
 
-export const onSearch = () => HomeEventBus.emit('toggleSearchBoard', true)
+export const onSearch = () => {
+  HomeEventBus.emit('toggleLinkBoard', false)
+  HomeEventBus.emit('toggleSearchBoard', true)
+}
 
-export const onLink = () => HomeEventBus.emit('toggleLinkBoard')
+export const onLink = () => {
+  HomeEventBus.emit('toggleSearchBoard', false)
+  HomeEventBus.emit('toggleLinkBoard', true)
+}
 
 export const initHotkey = () => {
   hotKeyJs('alt+q', onSearch)

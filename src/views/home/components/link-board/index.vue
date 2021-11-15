@@ -42,7 +42,10 @@ export default {
   components: { LinkSearch, LinkBoardItem },
   setup () {
     const isShow = ref(false)
-    const toggleShow = () => isShow.value = !isShow.value
+    const toggleShow = state => {
+      if (typeof state === 'boolean' && !state && !isShow.value) return
+      isShow.value = !isShow.value
+    }
     const list = ref([])
     let originList = []
     const carousel = ref(null)
