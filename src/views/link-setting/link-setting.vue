@@ -14,14 +14,14 @@
                      @MouseDown="Down"
                      @MouseUp.stop="up"
                      @MouseMove.stop="move"
-                     :isUser="true" />
+                     :isUser="true"/>
         </div>
       </div>
       <div class="all-link-content">
         <link-item v-for="link in allList"
                    :key="link.id"
                    :link="link"
-                   @click="itemIn(link.id)" />
+                   @click="itemIn(link.id)"/>
       </div>
     </div>
   </div>

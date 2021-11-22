@@ -1,4 +1,4 @@
-import { throttle } from 'lodash'
+// import { throttle } from 'lodash'
 import LinkApi from '@/api/module/link-api'
 import { formatLinkGroup } from '@/views/hooks'
 
@@ -44,9 +44,22 @@ const computedDom = (curL, curT) => {
   idx = index
 }
 
-export const move = throttle(e => {
-  if (lock || !el) return
+// export const move = throttle(e => {
+//   if (lock || !el) return
+//
+//   const { minX, maxX, minY, maxY } = OUT_RECT
+//
+//   let curL = e.clientX - START_RECT.x + START_RECT.left
+//   let curT = e.clientY - START_RECT.y + START_RECT.top
+//   curL = curL < minX ? minX : (curL > maxX ? maxX : curL)
+//   curT = curT < minY ? minY : (curT > maxY ? maxY : curT)
+//   el.style.cssText = `position: absolute; left: ${curL}px; top: ${curT}px; z-index: 1000;`
+//   el.classList.remove('isCopy')
+//   computedDom(curL, curT)
+// }, 60)
 
+export const move = e => {
+  if (lock || !e) return
   const { minX, maxX, minY, maxY } = OUT_RECT
 
   let curL = e.clientX - START_RECT.x + START_RECT.left
@@ -56,19 +69,9 @@ export const move = throttle(e => {
   el.style.cssText = `position: absolute; left: ${curL}px; top: ${curT}px; z-index: 1000;`
   el.classList.remove('isCopy')
   computedDom(curL, curT)
-}, 60)
+}
 
-export const up = async e => {
-  const ids = list.value.map(l => l.id)
-  delete copyItem.isCopy
-
-  const index = list.value.findIndex(item => item.id === link.id)
-  list.value.splice(index, 1, link)
-
-  await updateUserLinks(ids, list, store)
-
-  el.parentNode.removeChild(el)
-
+const reset = () => {
   lock = true
   domLock = false
   el = null
@@ -81,6 +84,23 @@ export const up = async e => {
 
   window.removeEventListener('mousemove', move)
   window.removeEventListener('mouseup', up)
+}
+
+export const up = async e => {
+  const eleRect = el.getBoundingClientRect()
+  if (Math.abs(eleRect.left - START_RECT.left) < 5 && Math.abs(eleRect.top - START_RECT.top) < 5) {
+    reset()
+    return
+  }
+  const ids = list.value.map(l => l.id)
+  delete copyItem.isCopy
+
+  const index = list.value.findIndex(item => item.id === link.id)
+  list.value.splice(index, 1, link)
+
+  await updateUserLinks(ids, list, store)
+
+  el.parentNode.removeChild(el)
 }
 
 export const down = (ele, startX, startY, l, li, sto) => {
@@ -112,8 +132,7 @@ export const down = (ele, startX, startY, l, li, sto) => {
 
   idx = list.value.findIndex(item => item.id === link.id)
   copyItem = {
-    ...link,
-    isCopy: true,
+    ...link, isCopy: true,
   }
 
   window.addEventListener('mousemove', move)
