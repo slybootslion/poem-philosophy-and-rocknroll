@@ -2,7 +2,7 @@
   <div class="link-container"
        :class="isShow ? 'show' : ''">
     <div class="search-mask"
-         @click="isShow = false" />
+         @click="isShow = false"/>
     <div class="link-box centerXY">
       <el-carousel height="100%"
                    :autoplay="false"
@@ -14,15 +14,15 @@
                           :key="index">
           <link-board-item v-for="item in card"
                            :key="item.id"
-                           :detail="item" />
+                           :detail="item"/>
         </el-carousel-item>
       </el-carousel>
       <link-search @linkSearch="handleLinkSearch"
-                   @clearSearch="handleClearSearch" />
+                   @clearSearch="handleClearSearch"/>
     </div>
     <div class="iconfont icon-settings"
          v-if="getters.isLogin"
-         @click="goSetting" />
+         @click="goSetting"/>
   </div>
 </template>
 
@@ -64,6 +64,7 @@ export default {
     onMounted(async () => {
       await getLink()
       carousel.value.setActiveItem(0)
+      HomeEventBus.on('RefreshLinks', getLink)
       HomeEventBus.on('toggleLinkBoard', toggleShow)
     })
 
@@ -87,13 +88,7 @@ export default {
     }
 
     return {
-      isShow,
-      list,
-      carousel,
-      goSetting,
-      getters: store.getters,
-      handleLinkSearch,
-      handleClearSearch,
+      isShow, list, carousel, goSetting, getters: store.getters, handleLinkSearch, handleClearSearch,
     }
   },
 }

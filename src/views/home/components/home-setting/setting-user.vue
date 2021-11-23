@@ -2,7 +2,7 @@
   <home-setting-container v-if="!getters.isLogin">
     <div class="qr-code">
       <el-image class="qr-image"
-                :src="qrLink" />
+                :src="qrLink"/>
       <div class="img-mask" v-show="showMask" @click="getQRCode">点击刷新</div>
     </div>
   </home-setting-container>
@@ -65,6 +65,8 @@ export default {
           await storageCache.removeQRCode()
           // 重新刷新主题图片列表
           HomeEventBus.emit('RefreshTheme')
+          // 重新获取用户链接列表
+          HomeEventBus.emit('RefreshLinks')
         }
       }
 
@@ -99,11 +101,7 @@ export default {
     }
 
     return {
-      qrLink,
-      getQRCode,
-      showMask,
-      getters: store.getters,
-      logout,
+      qrLink, getQRCode, showMask, getters: store.getters, logout,
     }
   },
 }
