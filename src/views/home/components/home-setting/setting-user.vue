@@ -5,6 +5,9 @@
                 :src="qrLink"/>
       <div class="img-mask" v-show="showMask" @click="getQRCode">点击刷新</div>
     </div>
+    <el-input v-model="phone">
+      <template #prepend>电话号码：</template>
+    </el-input>
   </home-setting-container>
   <home-setting-container v-else>
     <home-setting-item text="退出登录" hide>
@@ -41,6 +44,7 @@ export default {
     const store = useStore()
     const qrLink = ref('')
     const showMask = ref(true)
+    const phone = ref('')
     const uuid = storageCache.getUuid()
     const timerSi = new TimerSimulateInterval()
 
@@ -101,7 +105,7 @@ export default {
     }
 
     return {
-      qrLink, getQRCode, showMask, getters: store.getters, logout,
+      qrLink, getQRCode, showMask, getters: store.getters, logout, phone,
     }
   },
 }
@@ -112,7 +116,7 @@ export default {
 
 .qr-code {
   width: 100%;
-  height: p2r(360);
+  height: p2r(260);
   position: relative;
   display: flex;
   align-items: center;
