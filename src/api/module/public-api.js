@@ -6,6 +6,22 @@ class PublicApi {
     this.prefix = '/sys/public'
   }
 
+  sendLoginSms (data) {
+    return http({
+      url: `${this.prefix}/sms`,
+      method: 'POST',
+      data,
+    })
+  }
+
+  loginSms (data) {
+    return http({
+      url: `${this.prefix}/sms-login`,
+      method: 'post',
+      data,
+    })
+  }
+
   getQRCode () {
     let uuid = storageCache.getUuid()
     if (!uuid) {

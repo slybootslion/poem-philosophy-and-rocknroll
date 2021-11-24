@@ -2,12 +2,26 @@
   <home-setting-container v-if="!getters.isLogin">
     <div class="qr-code">
       <el-image class="qr-image"
-                :src="qrLink"/>
+                :src="qrLink" />
       <div class="img-mask" v-show="showMask" @click="getQRCode">点击刷新</div>
     </div>
-    <el-input v-model="phone">
-      <template #prepend>电话号码：</template>
-    </el-input>
+    <div class="input-box">
+      <div>手机登录：</div>
+      <el-input v-model="smsCode.phone" class="phone-input">
+        <template #prepend>
+          <i class="el-icon-mobile-phone"></i>
+        </template>
+        <template #append>
+          <el-button icon="el-icon-message" @click="sendSMS" v-if="smsCode.toggle"></el-button>
+          <el-button disabled v-else>{{ smsCode.sec }}</el-button>
+        </template>
+      </el-input>
+      <el-input v-model="smsCode.code" class="phone-input">
+        <template #append>
+          <el-button icon="el-icon-coordinate" @click="smsLogin"></el-button>
+        </template>
+      </el-input>
+    </div>
   </home-setting-container>
   <home-setting-container v-else>
     <home-setting-item text="退出登录" hide>
@@ -28,7 +42,7 @@
 
 <script>
 import HomeSettingContainer from './setting-container'
-import { onUnmounted, ref } from 'vue'
+import { onUnmounted, reactive, ref } from 'vue'
 import { useStore } from 'vuex'
 import PublicApi from '@/api/module/public-api'
 import { showMessage, storageCache, TimerSimulateInterval } from '@/utils'
@@ -41,10 +55,16 @@ export default {
   name: 'home-setting-user-setting',
   components: { HomeSettingItem, HomeSettingContainer },
   setup () {
+    const SEC = 60 * 10
     const store = useStore()
     const qrLink = ref('')
     const showMask = ref(true)
-    const phone = ref('')
+    const smsCode = reactive({
+      phone: '',
+      code: '',
+      toggle: true,
+      sec: SEC,
+    })
     const uuid = storageCache.getUuid()
     const timerSi = new TimerSimulateInterval()
 
@@ -104,8 +124,54 @@ export default {
       // 暂不刷新主题列表，节省流量
     }
 
+    const sendSMS = async () => {
+      const phone = smsCode.phone
+      const reg = /^[1][3-9][0-9]{9}$/
+      if (!reg.test(phone)) return
+      const tsi = new TimerSimulateInterval()
+      sendSMS.tsi = tsi
+      try {
+        smsCode.toggle = false
+        await publicApi.sendLoginSms({ phone, type: 1 })
+        tsi.simulateInterval(() => smsCode.sec--, 1000)
+        setTimeout(() => {
+          if (sendSMS.tsi.timer) {
+            tsi.simulateClearInterval()
+            smsCode.toggle = true
+            smsCode.sec = SEC
+          }
+        }, 1000 * 60 * 5)
+      } catch (err) {
+        smsCode.sec = SEC
+        smsCode.toggle = true
+        tsi.simulateClearInterval()
+      }
+    }
+
+    const smsLogin = async () => {
+      const { phone, code } = smsCode
+      if (!phone && !code) return
+      const res = await publicApi.loginSms({ phone, code })
+      await handlerLogin(res)
+      if (sendSMS.tsi.timer) sendSMS.tsi.simulateClearInterval()
+    }
+
+    async function handlerLogin (res) {
+      const { token, userInfo } = res
+      if (token) {
+        clearCheckLogin()
+        await store.dispatch('user/setTokenAction', token)
+        await store.dispatch('user/setUserInfoAction', userInfo)
+        await storageCache.removeQRCode()
+        // 重新刷新主题图片列表
+        HomeEventBus.emit('RefreshTheme')
+        // 重新获取用户链接列表
+        HomeEventBus.emit('RefreshLinks')
+      }
+    }
+
     return {
-      qrLink, getQRCode, showMask, getters: store.getters, logout, phone,
+      qrLink, getQRCode, showMask, getters: store.getters, logout, smsCode, sendSMS, smsLogin,
     }
   },
 }
@@ -116,7 +182,7 @@ export default {
 
 .qr-code {
   width: 100%;
-  height: p2r(260);
+  height: p2r(230);
   position: relative;
   display: flex;
   align-items: center;
@@ -138,6 +204,14 @@ export default {
     position: absolute;
     top: 0;
     left: 0;
+  }
+}
+
+.input-box {
+  width: p2r(390);
+
+  .phone-input {
+    margin-top: p2r(10);
   }
 }
 </style>
