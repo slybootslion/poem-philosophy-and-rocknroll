@@ -1,24 +1,9 @@
-<template>
-  <router-view />
-  <loading-page-comp v-if="store.getters.isPageLoading" />
-</template>
-
-<script>
-import { useStore } from 'vuex'
-import LoadingPageComp from '@/components/loading-page/loading-page-comp'
-
-export default {
-  name: 'App',
-  components: { LoadingPageComp },
-  setup () {
-    const store = useStore()
-    store.dispatch('sys/setIsLoadingAction', true)
-    return {
-      store,
-    }
-  },
-}
+<script setup>
+import LoadingComponent from "./components/loading-component/loading-component.vue";
 </script>
 
-<style lang="scss" rel="stylesheet/scss" scoped>
-</style>
+<template>
+  <router-view />
+  <loading-component />
+</template>
+

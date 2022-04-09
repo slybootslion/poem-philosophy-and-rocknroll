@@ -1,45 +1,23 @@
 {
-  "name": "poem-philosophy-and-rocknrll",
-  "version": "0.1.0",
+  "name": "poem-philosophy-and-rocknroll",
   "private": true,
+  "version": "0.0.0",
   "scripts": {
-    "serve": "vue-cli-service serve --port 39001",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "dev": "vite --port 39000",
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "dependencies": {
-    "axios": "^0.21.1",
-    "core-js": "^3.6.5",
-    "dayjs": "^1.10.4",
-    "element-plus": "^1.0.2-beta.40",
-    "hotkeys-js": "^3.8.5",
-    "lodash": "^4.17.21",
-    "mitt": "^2.1.0",
+    "@varlet/ui": "^1.27.0",
     "normalize.css": "^8.0.1",
-    "uuid": "^8.3.2",
-    "vue": "^3.0.0",
-    "vue-router": "^4.0.0-0",
-    "vuex": "^4.0.0-0",
-    "vuex-persistedstate": "^4.0.0-beta.3",
-    "web-storage-cache": "^1.1.1"
+    "pinia": "^2.0.13",
+    "vue": "^3.2.25",
+    "vue-router": "^4.0.14"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "~4.5.0",
-    "@vue/cli-plugin-eslint": "~4.5.0",
-    "@vue/cli-plugin-router": "~4.5.0",
-    "@vue/cli-plugin-vuex": "~4.5.0",
-    "@vue/cli-service": "~4.5.0",
-    "@vue/compiler-sfc": "^3.0.0",
-    "@vue/eslint-config-standard": "^5.1.2",
-    "babel-eslint": "^10.1.0",
-    "babel-plugin-import": "^1.13.3",
-    "eslint": "^6.7.2",
-    "eslint-plugin-import": "^2.20.2",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-standard": "^4.0.0",
-    "eslint-plugin-vue": "^7.0.0",
-    "sass": "^1.26.5",
-    "sass-loader": "^8.0.2"
+    "@vitejs/plugin-vue": "^2.3.0",
+    "sass": "^1.50.0",
+    "unplugin-vue-components": "^0.18.5",
+    "vite": "^2.9.0"
   }
 }
