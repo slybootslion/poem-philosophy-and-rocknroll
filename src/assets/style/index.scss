@@ -1,6 +1,7 @@
 // px2rem
 $ration: 100;
 @function p2r($px) {
+  //@return calc(#{$px} / #{$ration}) + rem;
   @return calc($px / $ration) + rem;
 }
 
@@ -19,7 +20,7 @@ $color-danger: #bb0000;
 $color-text-main: #303133;
 $color-text-normal: #606266;
 $color-text-sub: #909399;
-$color-text-placehoder: #C0C4CC;
+$color-text-placeholder: #C0C4CC;
 
 // 边框
 $color-border-1: #DCDFE6;

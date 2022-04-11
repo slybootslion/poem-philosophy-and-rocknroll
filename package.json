@@ -9,8 +9,10 @@
   },
   "dependencies": {
     "@varlet/ui": "^1.27.0",
+    "axios": "^0.26.1",
     "normalize.css": "^8.0.1",
     "pinia": "^2.0.13",
+    "uuid": "^8.3.2",
     "vue": "^3.2.25",
     "vue-router": "^4.0.14"
   },
