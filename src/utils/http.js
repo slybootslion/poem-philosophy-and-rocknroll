@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { showMessage } from "./tools";
+import { showMessage, StorageCache } from "./tools";
 import { useUserInfo } from '../store/user-info'
 
 const pending = {}
@@ -79,21 +79,21 @@ http.interceptors.response.use(
 function handleServerActiveException (code, message, res, error_code) {
   return new Promise((resolve, reject) => {
     // token异常，没有权限，需要重新登录
+    const { clearUserInfo, setToken } = useUserInfo()
+    console.log(res, error_code)
     if (error_code === 10040 || error_code === 10060) {
-      const { clearUserInfo } = useUserInfo()
       clearUserInfo()
     } else if (error_code === 10050) {
       // token刷新，重发请求
       const { config } = res
-      // const userOutsideStore = useUserOutsideStore()
-      // userOutsideStore.setToken(res.data.data.token)
-      http(config).then(result => {
-        return resolve(result)
-      }).catch(console.log)
+      const token = res.data.data.token
+      setToken(token)
+      StorageCache.set('token', token)
+      http(config).then(result => resolve(result)).catch(console.log)
       return
     }
 
-    if (message.trim()) ElMessage.error(message)
+    if (message.trim()) showMessage(message.trim())
     reject(message)
   })
 }

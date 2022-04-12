@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref } from "vue";
+import { StorageCache } from "../utils/tools";
 
 export const usePageLoading = defineStore('pageLoading', () => {
   const isLoading = ref(true)
@@ -26,5 +27,11 @@ export const useThemeNight = defineStore('themeNight', () => {
     return isNight.value
   }
 
-  return { isNight, changeNight, nightThemeState }
+  const bgTimeIndex = ref(Number(StorageCache.get('bgTime')) || 3)
+
+  function changeBgTimeIndex (idx) {
+    bgTimeIndex.value = idx
+  }
+
+  return { isNight, changeNight, nightThemeState, changeBgTimeIndex, bgTimeIndex }
 })
