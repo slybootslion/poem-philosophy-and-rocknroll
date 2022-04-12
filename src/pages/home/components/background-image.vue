@@ -13,6 +13,11 @@ const loadPic = src => {
   image.onload = () => finishedLoading()
 }
 loadPic(url.value)
+
+const getThemeList = () => {
+  const list = awiat
+}
+
 </script>
 
 <template>

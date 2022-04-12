@@ -1,30 +1,55 @@
 <script setup>
 import { ref } from "vue";
-import { httpLoginQrcode, httpLoginQrcodeCheck } from "../libs/httpUser";
+import { httpLoginQrcode, httpLoginQrcodeCheck, httpLogout } from "../libs/httpUser";
 import { useUserInfo } from '../../../store/user-info'
+import { StorageCache, TimerSimulateInterval } from "../../../utils/tools";
+import { Dialog } from "@varlet/ui";
 
 const showPopup = ref(false)
 const qrcodeSrc = ref('')
 
+const loginInterval = new TimerSimulateInterval()
+const { setUserInfo, setIsLogin, setToken, user } = useUserInfo()
+const onConfirm = async d => httpLogout().then(() => {
+  StorageCache.clear()
+  setIsLogin(false)
+  setToken('')
+  setUserInfo({})
+  d()
+})
 const handleUser = async () => {
-  showPopup.value = true
-  const res = await httpLoginQrcode()
-  qrcodeSrc.value = res.qrcode
-}
-
-
-
-const checkQrcodeLogin = async () => {
-  const res = await httpLoginQrcodeCheck()
-  if (res && res.token) {
-
+  if (user.isLogin) {
+    // show logout
+    await Dialog({
+      message: '确定退出登录？',
+      onBeforeClose: (action, done) => {
+        if (action === 'confirm') {
+          onConfirm(done)
+        }
+        done()
+      }
+    })
   } else {
-
+    // show login qrcode
+    showPopup.value = true
+    const res = await httpLoginQrcode()
+    qrcodeSrc.value = res.qrcode
+    loginInterval.simulateInterval({ callback: checkQrcodeLogin, countLimit: 60 * 5 })
   }
 }
 
-const qrcodePopupClosed = async () => {
-  console.log('close')
+const qrcodePopupClosed = () => loginInterval.simulateClearInterval()
+const checkQrcodeLogin = async () => {
+  const res = await httpLoginQrcodeCheck()
+  if (res && res.token) {
+    setUserInfo(res.user)
+    setToken(res.token)
+    setIsLogin()
+    StorageCache.set('token', res.token)
+    StorageCache.set('userInfo', JSON.stringify(res.user))
+    qrcodePopupClosed()
+    showPopup.value = false
+  }
 }
 </script>
 
@@ -32,7 +57,6 @@ const qrcodePopupClosed = async () => {
   <span class="iconfont icon-profile" @click="handleUser" />
   <div class="popup-box">
     <var-popup v-model:show="showPopup"
-               overlay-class="custom-overlay"
                @closed="qrcodePopupClosed">
       <div class="login-card">
         <var-loading :loading="!qrcodeSrc">

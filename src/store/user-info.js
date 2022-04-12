@@ -3,10 +3,17 @@ import { reactive } from "vue";
 import { StorageCache } from "../utils/tools";
 
 export const useUserInfo = defineStore('userState', () => {
+
+  const initUserInfo = () => {
+    const userInfo = StorageCache.get('userInfo')
+    if (!userInfo) return {}
+    return JSON.parse(userInfo)
+  }
+
   const user = reactive({
-    userInfo: {},
+    userInfo: initUserInfo(),
     token: StorageCache.get('token') || '',
-    isLogin: false
+    isLogin: !!StorageCache.get('token')
   })
 
   function setUserInfo (userInfo) {

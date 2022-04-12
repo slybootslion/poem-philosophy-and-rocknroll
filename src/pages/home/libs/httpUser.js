@@ -19,8 +19,11 @@ export const httpLoginQrcodeCheck = async () => {
   if (!uuid) throw new Error('no uuid in localstorage')
   return http({
     url: '/auth/login/qrcode_check',
-    params: {
+    method: 'post',
+    data: {
       uuid
     }
   })
 }
+
+export const httpLogout = async () => http({ url: '/auth/logout' })
