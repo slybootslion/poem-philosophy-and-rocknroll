@@ -2,12 +2,14 @@
 import HomeFooter from "./components/home-footer.vue";
 import BackgroundImage from "./components/background-image.vue";
 import UserBoard from "./components/user-board.vue";
+import ElectronicClock from "./components/electronic-clock.vue";
 </script>
 
 <template>
   <div class="home-container">
     <div class="container">
       <background-image />
+      <electronic-clock />
       <user-board />
     </div>
     <home-footer />

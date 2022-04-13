@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref } from "vue";
 import { StorageCache } from "../utils/tools";
+import { pinia } from "./index";
 
 export const usePageLoading = defineStore('pageLoading', () => {
   const isLoading = ref(true)
@@ -17,9 +18,11 @@ export const usePageLoading = defineStore('pageLoading', () => {
 })
 
 export const useThemeNight = defineStore('themeNight', () => {
-  const isNight = ref(false)
+  const localState = StorageCache.get('isNight')
+  const isNight = ref(JSON.parse(localState))
 
   function changeNight (val) {
+    StorageCache.set('isNight', val)
     isNight.value = val
   }
 
@@ -35,3 +38,19 @@ export const useThemeNight = defineStore('themeNight', () => {
 
   return { isNight, changeNight, nightThemeState, changeBgTimeIndex, bgTimeIndex }
 })
+
+export const useHomeState = defineStore('homeState', () => {
+  const isTimeShow = ref(true)
+
+  function changeTimeState (state) {
+    isTimeShow.value = state
+  }
+
+  function isTimeState () {
+    return isTimeShow.value
+  }
+
+  return { isTimeShow, changeTimeState, isTimeState }
+})
+
+export const useHomeStateOutside = () => useHomeState(pinia)

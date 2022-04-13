@@ -1,13 +1,19 @@
 <script setup>
-import { ref } from "vue";
-import { usePageLoading, useThemeNight } from '../../../store/home-theme'
+import { computed, ref, watch, watchEffect } from "vue";
+import { usePageLoading, useThemeNight, useHomeState } from '../../../store/home-theme'
 import { httpThemeList } from "../libs/httpTheme";
 import { randomInt, TimerSimulateInterval } from "../../../utils/tools";
+import { usePopupState } from '../libs/popup-state-hook'
 
 const url = ref('https://slybootslion.oss-cn-chengdu.aliyuncs.com/ppr/meitu/2021-04-25/80c43c8702f6d387113d74e0ea7f93a8.jpg')
 
 const { finishedLoading, loadingState } = usePageLoading()
-const { isNight, changeBgTimeIndex, bgTimeIndex } = useThemeNight()
+const {
+  isNight, changeBgTimeIndex, changeNight,
+  nightThemeState, bgTimeIndex
+} = useThemeNight()
+const { isTimeState, changeTimeState } = useHomeState()
+const { isShow, openPopup, closePopup } = usePopupState()
 
 const dict = {
   1: 60 * 60 * 0.5 * 1000,
@@ -41,21 +47,45 @@ getThemeList()
 
 const themeTimer = new TimerSimulateInterval()
 
+const currentImageId = ref(0)
+// const themeList = computed(() => {
+//   console.log(currentImageId.value)
+//   const l =  list.value.map(image => {
+//     image.isActive = image.id === currentImageId.value
+//     return image
+//   })
+//   console.log(l)
+//   return l
+// })
+
+watch(currentImageId, (val, oldVal) => {
+  list.value = list.value.map(image => {
+    image.isActive = image.id === currentImageId.value
+    return image
+  })
+})
+
 const selectImage = () => {
   const index = randomInt(0, list.value.length - 1)
+  const image = list.value[index]
+  currentImageId.value = image.id
   return {
-    image: list.value[index].oss_name,
-    index
+    image: image.oss_name,
+    index,
   }
 }
 
 const pickHandle = id => {
-  let {
-    index: currentIndex,
-    image: currentImage,
-  } = selectImage()
-  if (loadingState()) loadPic(currentImage.oss_name)
-  url.value = currentImage
+  let currentIndex
+  if (!id) {
+    let {
+      index,
+      image: currentImage,
+    } = selectImage()
+    currentIndex = index
+    if (loadingState()) loadPic(currentImage.oss_name)
+    url.value = currentImage
+  }
 
   const changeImg = () => {
     themeTimer.simulateClearInterval()
@@ -70,26 +100,65 @@ const pickHandle = id => {
   changeImg()
 
   function selectIndex () {
-    const index = selectImage().index
-    if (index === currentIndex) return selectIndex()
+    let index = null
     if (id) {
       url.value = (list.value.find(theme => theme.id === id)).oss_name
+      currentImageId.value = id
       id = null
+    } else {
+      index = selectImage().index
+      if (index === currentIndex) return selectIndex()
     }
     return index
   }
 }
+
+const handleNight = val => changeNight(val)
+const nightState = ref(isNight)
 </script>
 
 <template>
   <canvas class="canvas"
           :style="{backgroundImage: `url(${url})`}" />
   <div class="cover" />
-  <div class="night-cover" v-if="isNight" />
+  <div class="night-cover" v-if="nightThemeState()" />
   <!--  setting icon and setting board-->
+  <var-icon name="image-outline"
+            v-show="isTimeState()"
+            class="theme-btn"
+            size="28"
+            @click="() => openPopup()" />
+  <div class="popup-box">
+    <var-popup v-model:show="isShow"
+               position="bottom"
+               @closed="() => closePopup()">
+      <div class="popup-content scroll-style">
+        <div class="theme-box">
+          <img :src="image.oss_name"
+               v-for="image in list"
+               :key="image.id"
+               :class="image.isActive ? 'active' : ''"
+               @click="pickHandle(image.id)" />
+        </div>
+        <div class="switch-box">
+          <div class="switch-item">
+            <span class="label">夜间模式：</span>
+            <var-switch v-model="nightState"
+                        @change="handleNight" />
+          </div>
+          <div class="switch-item">
+            <span class="label">自动夜间模式：</span>
+            <var-switch v-model="isNight" />
+          </div>
+        </div>
+      </div>
+    </var-popup>
+  </div>
 </template>
 
 <style scoped lang="scss">
+@import '../../../assets/style/index';
+
 .canvas {
   width: 100%;
   height: 100%;
@@ -118,5 +187,66 @@ const pickHandle = id => {
   top: 0;
   left: 0;
   background-color: rgba(0, 0, 0, .85);
+}
+
+.theme-btn {
+  position: absolute;
+  bottom: p2r(20);
+  left: p2r(20);
+  color: $color-info;
+  cursor: pointer;
+
+  &:hover {
+    color: #fff;
+  }
+}
+
+
+.popup-box {
+  :deep(.var-popup__content) {
+    background-color: transparent;
+    width: 80%;
+    max-height: 60%;
+    padding: p2r(20);
+    box-shadow: p2r(10) p2r(10) p2r(20) rgba(0, 0, 0, .3);
+
+    &::-webkit-scrollbar {
+      width: p2r(4);
+    }
+    &::-webkit-scrollbar-thumb {
+      border-radius: p2r(10);
+      -webkit-box-shadow: inset 0 0 p2r(5) rgba(0, 0, 0, .2);
+      background: rgba(0, 0, 0, .2);
+    }
+    &::-webkit-scrollbar-track {
+      -webkit-box-shadow: inset 0 0 p2r(5) rgba(0, 0, 0, .2);
+      border-radius: 0;
+      background: rgba(0, 0, 0, .1);
+    }
+
+    .popup-content {
+      width: 100%;
+      height: 100%;
+      overflow-y: auto;
+      color: #fff;
+
+      .theme-box {
+        width: 100%;
+        display: flex;
+        justify-content: flex-start;
+
+        img {
+          width: p2r(240);
+          height: p2r(160);
+          margin: 0 p2r(10) p2r(10) 0;
+          cursor: pointer;
+
+          &.active {
+            border: 1px solid #fff;
+          }
+        }
+      }
+    }
+  }
 }
 </style>

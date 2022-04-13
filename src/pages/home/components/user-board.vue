@@ -4,9 +4,15 @@ import { httpLoginQrcode, httpLoginQrcodeCheck, httpLogout } from "../libs/httpU
 import { useUserInfo } from '../../../store/user-info'
 import { StorageCache, TimerSimulateInterval } from "../../../utils/tools";
 import { Dialog } from "@varlet/ui";
+import { usePopupState } from '../libs/popup-state-hook'
+import { useHomeState } from "../../../store/home-theme";
 
-const showPopup = ref(false)
 const qrcodeSrc = ref('')
+
+const {
+  isShow, closePopup, openPopup
+} = usePopupState()
+const { isTimeState, changeTimeState } = useHomeState()
 
 const loginInterval = new TimerSimulateInterval()
 const { setUserInfo, setIsLogin, setToken, user } = useUserInfo()
@@ -16,8 +22,11 @@ const onConfirm = async d => httpLogout().then(() => {
   setToken('')
   setUserInfo({})
   d()
+  changeTimeState(true)
 })
+
 const handleUser = async () => {
+  changeTimeState(false)
   if (user.isLogin) {
     // show logout
     await Dialog({
@@ -27,11 +36,12 @@ const handleUser = async () => {
           onConfirm(done)
         }
         done()
+        changeTimeState(true)
       }
     })
   } else {
     // show login qrcode
-    showPopup.value = true
+    openPopup()
     const res = await httpLoginQrcode()
     qrcodeSrc.value = res.qrcode
     loginInterval.simulateInterval({ callback: checkQrcodeLogin, countLimit: 60 * 5 })
@@ -47,17 +57,18 @@ const checkQrcodeLogin = async () => {
     setIsLogin()
     StorageCache.set('token', res.token)
     StorageCache.set('userInfo', JSON.stringify(res.user))
-    qrcodePopupClosed()
-    showPopup.value = false
+    closePopup(qrcodePopupClosed)
   }
 }
 </script>
 
 <template>
-  <span class="iconfont icon-profile" @click="handleUser" />
+  <span class="iconfont icon-profile"
+        v-show="isTimeState()"
+        @click="handleUser" />
   <div class="popup-box">
-    <var-popup v-model:show="showPopup"
-               @closed="qrcodePopupClosed">
+    <var-popup v-model:show="isShow"
+               @closed="closePopup(qrcodePopupClosed)">
       <div class="login-card">
         <var-loading :loading="!qrcodeSrc">
           <img v-show="qrcodeSrc" :src="qrcodeSrc" alt="">

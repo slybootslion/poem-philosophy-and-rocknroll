@@ -22,7 +22,9 @@ const config = {
   headers: {
     'Content-Type': 'application/json; charset=utf-8',
   },
-  baseURL: import.meta.env.MODE && import.meta.env.MODE === 'development' ? 'http://localhost:40000' : 'https://f.sketchmac.com',
+  baseURL: import.meta.env.MODE && import.meta.env.MODE === 'development' ?
+    'http://localhost:40000' :
+    'https://f.sketchmac.com',
   timeout: 5 * 1000, // 请求超时时间设置
   crossDomain: true,
   validateStatus (status) {
@@ -80,9 +82,9 @@ function handleServerActiveException (code, message, res, error_code) {
   return new Promise((resolve, reject) => {
     // token异常，没有权限，需要重新登录
     const { clearUserInfo, setToken } = useUserInfo()
-    console.log(res, error_code)
     if (error_code === 10040 || error_code === 10060) {
       clearUserInfo()
+      return
     } else if (error_code === 10050) {
       // token刷新，重发请求
       const { config } = res
