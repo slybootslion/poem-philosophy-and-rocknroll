@@ -1,14 +1,49 @@
 <script setup>
-console.log('Electronic clock')
+import { useThemeNight } from "../../../store/home-theme";
+import { computed, onBeforeUnmount, onUnmounted, reactive } from "vue";
+import { clock, isNightClock } from "../libs/clock-hook";
+import { TimerSimulateInterval } from "../../../utils/tools";
+
+const {
+  changeBgTimeIndex, changeNight,
+  nightAutoState,
+  nightThemeState, bgTimeIndex
+} = useThemeNight()
+
+const isNight = computed(() => nightThemeState())
+const clockData = reactive({
+  time: '',
+  day: '',
+  date: '',
+})
+
+const computedClock = () => {
+  const { day, date, time } = clock()
+  if (nightAutoState()) {
+    isNightClock() ? changeNight(true) : changeNight(false)
+  }
+  clockData.day = day
+  clockData.time = time
+  clockData.date = date
+}
+computedClock()
+
+const clockTimer = new TimerSimulateInterval()
+clockTimer.simulateInterval({
+  countLimit: Infinity,
+  callback: computedClock,
+  interval: 1000,
+})
+onBeforeUnmount(() => clockTimer.simulateClearInterval())
 </script>
 
 <template>
-  <div class="clock centerXY" :class="false ? 'night' : ''">
+  <div class="clock centerXY" :class="isNight ? 'night' : ''">
     <div class="time-box">
-      time
+      {{ clockData.time }}
     </div>
     <div class="date-box">
-      date
+      {{ clockData.date }} {{ clockData.day }}
     </div>
   </div>
 </template>
@@ -35,7 +70,7 @@ console.log('Electronic clock')
     position: relative;
     padding: 0 p2r(30);
 
-    &:hover{
+    &:hover {
       .icon-time {
         opacity: .5;
       }
@@ -49,7 +84,7 @@ console.log('Electronic clock')
       top: p2r(10);
       right: p2r(10);
 
-      &:hover{
+      &:hover {
         opacity: 1;
       }
     }

@@ -30,13 +30,30 @@ export const useThemeNight = defineStore('themeNight', () => {
     return isNight.value
   }
 
+  const localStateAuto = StorageCache.get('isNightAuto')
+  const isNightAuto = ref(JSON.parse(localStateAuto))
+
+  const changeNightAuto = val => {
+    StorageCache.set('isNightAuto', val)
+    isNightAuto.value = val
+  }
+
+  const nightAutoState = () => isNightAuto.value
+
+
   const bgTimeIndex = ref(Number(StorageCache.get('bgTime')) || 3)
 
   function changeBgTimeIndex (idx) {
     bgTimeIndex.value = idx
   }
 
-  return { isNight, changeNight, nightThemeState, changeBgTimeIndex, bgTimeIndex }
+  const bgTimeIndexState = () => bgTimeIndex.value
+
+  return {
+    isNight, changeNight, nightThemeState,
+    isNightAuto, changeNightAuto, nightAutoState,
+    changeBgTimeIndex, bgTimeIndex, bgTimeIndexState
+  }
 })
 
 export const useHomeState = defineStore('homeState', () => {

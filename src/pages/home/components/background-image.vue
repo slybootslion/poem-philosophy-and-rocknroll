@@ -9,8 +9,9 @@ const url = ref('https://slybootslion.oss-cn-chengdu.aliyuncs.com/ppr/meitu/2021
 
 const { finishedLoading, loadingState } = usePageLoading()
 const {
-  isNight, changeBgTimeIndex, changeNight,
-  nightThemeState, bgTimeIndex
+  isNight, changeNight, nightThemeState,
+  isNightAuto, changeNightAuto,
+  bgTimeIndexState, changeBgTimeIndex,
 } = useThemeNight()
 const { isTimeState, changeTimeState } = useHomeState()
 const { isShow, openPopup, closePopup } = usePopupState()
@@ -23,7 +24,7 @@ const dict = {
   5: 60 * 60 * 12 * 1000,
   6: 0,
 }
-let changeBgTime = dict[bgTimeIndex]
+let changeBgTime = dict[bgTimeIndexState()]
 
 const loadPic = src => {
   const image = new Image()
@@ -113,8 +114,10 @@ const pickHandle = id => {
   }
 }
 
-const handleNight = val => changeNight(val)
 const nightState = ref(isNight)
+const handleNight = val => changeNight(val)
+const nightAutoState = ref(isNightAuto)
+const handleNightAuto = val => changeNightAuto(val)
 </script>
 
 <template>
@@ -148,7 +151,8 @@ const nightState = ref(isNight)
           </div>
           <div class="switch-item">
             <span class="label">自动夜间模式：</span>
-            <var-switch v-model="isNight" />
+            <var-switch v-model="nightAutoState"
+                        @change="handleNightAuto" />
           </div>
         </div>
       </div>
