@@ -49,15 +49,6 @@ getThemeList()
 const themeTimer = new TimerSimulateInterval()
 
 const currentImageId = ref(0)
-// const themeList = computed(() => {
-//   console.log(currentImageId.value)
-//   const l =  list.value.map(image => {
-//     image.isActive = image.id === currentImageId.value
-//     return image
-//   })
-//   console.log(l)
-//   return l
-// })
 
 watch(currentImageId, (val, oldVal) => {
   list.value = list.value.map(image => {
