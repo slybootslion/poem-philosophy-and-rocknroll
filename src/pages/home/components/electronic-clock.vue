@@ -1,6 +1,6 @@
 <script setup>
-import { useThemeNight } from "../../../store/home-theme";
-import { computed, onBeforeUnmount, onUnmounted, reactive } from "vue";
+import { useHomeState, useThemeNight } from "../../../store/home-theme";
+import { computed, onBeforeUnmount, reactive } from "vue";
 import { clock, isNightClock } from "../libs/clock-hook";
 import { TimerSimulateInterval } from "../../../utils/tools";
 
@@ -9,6 +9,7 @@ const {
   nightAutoState,
   nightThemeState, bgTimeIndex
 } = useThemeNight()
+const { isTimeState, changeTimeState } = useHomeState()
 
 const isNight = computed(() => nightThemeState())
 const clockData = reactive({
@@ -20,7 +21,7 @@ const clockData = reactive({
 const computedClock = () => {
   const { day, date, time } = clock()
   if (nightAutoState()) {
-    isNightClock() ? changeNight(true) : changeNight(false)
+    isNightClock() ? !nightThemeState() && changeNight(true) : nightThemeState() && changeNight(false)
   }
   clockData.day = day
   clockData.time = time
@@ -38,7 +39,9 @@ onBeforeUnmount(() => clockTimer.simulateClearInterval())
 </script>
 
 <template>
-  <div class="clock centerXY" :class="isNight ? 'night' : ''">
+  <div class="clock centerXY"
+       v-show="isTimeState()"
+       :class="isNight ? 'night' : ''">
     <div class="time-box">
       {{ clockData.time }}
     </div>

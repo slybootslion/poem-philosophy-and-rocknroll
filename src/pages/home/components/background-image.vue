@@ -1,19 +1,20 @@
 <script setup>
-import { computed, ref, watch, watchEffect } from "vue";
-import { usePageLoading, useThemeNight, useHomeState } from '../../../store/home-theme'
+import { computed, ref, watch } from "vue";
+import { useHomeState, usePageLoading, useThemeNight } from '../../../store/home-theme'
 import { httpThemeList } from "../libs/httpTheme";
-import { randomInt, TimerSimulateInterval } from "../../../utils/tools";
+import { randomInt, showMessage, TimerSimulateInterval } from "../../../utils/tools";
 import { usePopupState } from '../libs/popup-state-hook'
+import { useUserInfo } from "../../../store/user-info";
 
 const url = ref('https://slybootslion.oss-cn-chengdu.aliyuncs.com/ppr/meitu/2021-04-25/80c43c8702f6d387113d74e0ea7f93a8.jpg')
 
 const { finishedLoading, loadingState } = usePageLoading()
 const {
   isNight, changeNight, nightThemeState,
-  isNightAuto, changeNightAuto,
+  isNightAuto, changeNightAuto, nightAutoState,
   bgTimeIndexState, changeBgTimeIndex,
 } = useThemeNight()
-const { isTimeState, changeTimeState } = useHomeState()
+const { isTimeState } = useHomeState()
 const { isShow, openPopup, closePopup } = usePopupState()
 
 const dict = {
@@ -33,9 +34,10 @@ const loadPic = src => {
 }
 loadPic(url.value)
 
+const { user } = useUserInfo()
 const list = ref([])
-
 const getThemeList = async () => {
+  if (!user.isLogin) return
   list.value = (await httpThemeList()).theme
   if (!list.value.length) return
   if (list.value.length === 1) {
@@ -50,7 +52,7 @@ const themeTimer = new TimerSimulateInterval()
 
 const currentImageId = ref(0)
 
-watch(currentImageId, (val, oldVal) => {
+watch(currentImageId, () => {
   list.value = list.value.map(image => {
     image.isActive = image.id === currentImageId.value
     return image
@@ -105,10 +107,30 @@ const pickHandle = id => {
   }
 }
 
-const nightState = ref(isNight)
-const handleNight = val => changeNight(val)
-const nightAutoState = ref(isNightAuto)
-const handleNightAuto = val => changeNightAuto(val)
+const nightState = computed({
+  get: () => nightThemeState(),
+  set: val => changeNight(val)
+})
+
+const autoState = computed({
+  get: () => nightAutoState(),
+  set: val => changeNightAuto(val)
+})
+
+const changeTimeRadio = ref(bgTimeIndexState())
+const timeRadioChange = val => {
+  changeBgTimeIndex(val)
+  changeBgTime = dict[bgTimeIndexState()]
+}
+
+
+const open = () => {
+  if (!user.isLogin) {
+    showMessage('未登录')
+    return
+  }
+  openPopup()
+}
 </script>
 
 <template>
@@ -116,12 +138,11 @@ const handleNightAuto = val => changeNightAuto(val)
           :style="{backgroundImage: `url(${url})`}" />
   <div class="cover" />
   <div class="night-cover" v-if="nightThemeState()" />
-  <!--  setting icon and setting board-->
   <var-icon name="image-outline"
             v-show="isTimeState()"
             class="theme-btn"
             size="28"
-            @click="() => openPopup()" />
+            @click="open" />
   <div class="popup-box">
     <var-popup v-model:show="isShow"
                position="bottom"
@@ -130,6 +151,7 @@ const handleNightAuto = val => changeNightAuto(val)
         <div class="theme-box">
           <img :src="image.oss_name"
                v-for="image in list"
+               alt=""
                :key="image.id"
                :class="image.isActive ? 'active' : ''"
                @click="pickHandle(image.id)" />
@@ -137,13 +159,23 @@ const handleNightAuto = val => changeNightAuto(val)
         <div class="switch-box">
           <div class="switch-item">
             <span class="label">夜间模式：</span>
-            <var-switch v-model="nightState"
-                        @change="handleNight" />
+            <var-switch v-model="nightState" />
           </div>
           <div class="switch-item">
             <span class="label">自动夜间模式：</span>
-            <var-switch v-model="nightAutoState"
-                        @change="handleNightAuto" />
+            <var-switch v-model="autoState" />
+          </div>
+          <div class="switch-item">
+            <var-radio-group v-model="changeTimeRadio">
+              <var-radio v-for="(val, key) in dict"
+                         :key="key"
+                         :checked-value="key"
+                         @change="timeRadioChange"
+                         checked-color="#fff"
+                         unchecked-color="#ededed">
+                {{ val / 1000 / 60 / 60 }}小时
+              </var-radio>
+            </var-radio-group>
           </div>
         </div>
       </div>

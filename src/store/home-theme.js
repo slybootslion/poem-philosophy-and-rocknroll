@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { ref } from "vue";
 import { StorageCache } from "../utils/tools";
 import { pinia } from "./index";
+import { isNightClock } from "../pages/home/libs/clock-hook";
 
 export const usePageLoading = defineStore('pageLoading', () => {
   const isLoading = ref(true)
@@ -23,6 +24,8 @@ export const useThemeNight = defineStore('themeNight', () => {
 
   function changeNight (val) {
     StorageCache.set('isNight', val)
+    if (val && nightAutoState() && !isNightClock()) changeNightAuto(false)
+    if (!val && nightAutoState() && isNightClock()) changeNightAuto(false)
     isNight.value = val
   }
 
@@ -40,10 +43,11 @@ export const useThemeNight = defineStore('themeNight', () => {
 
   const nightAutoState = () => isNightAuto.value
 
-
-  const bgTimeIndex = ref(Number(StorageCache.get('bgTime')) || 3)
+  const changeTime = StorageCache.get('changeBgTime')
+  const bgTimeIndex = ref(changeTime || '3')
 
   function changeBgTimeIndex (idx) {
+    StorageCache.set('changeBgTime', idx)
     bgTimeIndex.value = idx
   }
 

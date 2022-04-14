@@ -11,6 +11,7 @@
     "@varlet/ui": "^1.27.0",
     "axios": "^0.26.1",
     "dayjs": "^1.11.0",
+    "hotkeys-js": "^3.8.9",
     "normalize.css": "^8.0.1",
     "pinia": "^2.0.13",
     "uuid": "^8.3.2",
