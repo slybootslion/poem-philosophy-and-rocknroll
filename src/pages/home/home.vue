@@ -6,11 +6,9 @@ import ElectronicClock from "./components/electronic-clock.vue";
 import SearchBoard from "./components/search-board.vue";
 import LinkBoard from "./components/link-board.vue";
 import { bindHotKey, unbindHotKey } from "../../utils/tools";
-import { linkCurrent, searchCurrent, useLinkBoard, useSearchBoard } from "../../store/functional-module";
+import { linkCurrent, searchCurrent } from "../../store/functional-module";
 import { onBeforeUnmount } from "vue";
 
-const { showSearchBoard, changeSearchBoard, searchBoardState } = useSearchBoard()
-const { showLinkBoard, changeLinkBoard, linkBoardState } = useLinkBoard()
 bindHotKey('alt+q', () => searchCurrent())
 bindHotKey('alt+l', () => linkCurrent())
 onBeforeUnmount(() => {
