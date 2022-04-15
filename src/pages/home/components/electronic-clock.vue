@@ -94,7 +94,7 @@ onBeforeUnmount(() => clockTimer.simulateClearInterval())
   }
 
   .date-box {
-    font-size: p2r(36);
+    font-size: p2r(28);
     position: relative;
   }
 }

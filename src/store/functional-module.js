@@ -39,3 +39,7 @@ export const linkCurrent = () => {
   changeLinkBoard()
   changeSearchBoard(false)
 }
+export const closeSearchBoard = () => {
+  changeSearchBoard(false)
+  changeTimeState(true)
+}

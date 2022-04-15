@@ -25,7 +25,7 @@ const config = {
   baseURL: import.meta.env.MODE && import.meta.env.MODE === 'development' ?
     'http://localhost:40000' :
     'https://f.sketchmac.com',
-  timeout: 5 * 1000, // 请求超时时间设置
+  timeout: 10 * 1000, // 请求超时时间设置
   crossDomain: true,
   validateStatus (status) {
     return status >= 200 && status < 510

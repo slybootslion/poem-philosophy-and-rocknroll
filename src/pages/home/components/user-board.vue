@@ -2,7 +2,7 @@
 import { ref } from "vue";
 import { httpLoginQrcode, httpLoginQrcodeCheck, httpLogout } from "../libs/httpUser";
 import { useUserInfo } from '../../../store/user-info'
-import { StorageCache, TimerSimulateInterval } from "../../../utils/tools";
+import { emitter, StorageCache, TimerSimulateInterval } from "../../../utils/tools";
 import { Dialog } from "@varlet/ui";
 import { usePopupState } from '../libs/popup-state-hook'
 import { useHomeState } from "../../../store/home-theme";
@@ -58,6 +58,10 @@ const checkQrcodeLogin = async () => {
     StorageCache.set('token', res.token)
     StorageCache.set('userInfo', JSON.stringify(res.user))
     closePopup(qrcodePopupClosed)
+
+    // 登录后的操作
+    emitter.emit('loadTheme')
+    emitter.emit('initSearchType')
   }
 }
 </script>

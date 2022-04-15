@@ -1,8 +1,8 @@
 <script setup>
-import { computed, ref, watch } from "vue";
+import { computed, onBeforeUnmount, ref, watch } from "vue";
 import { useHomeState, usePageLoading, useThemeNight } from '../../../store/home-theme'
 import { httpThemeList } from "../libs/httpTheme";
-import { randomInt, showMessage, TimerSimulateInterval } from "../../../utils/tools";
+import { emitter, randomInt, showMessage, TimerSimulateInterval } from "../../../utils/tools";
 import { usePopupState } from '../libs/popup-state-hook'
 import { useUserInfo } from "../../../store/user-info";
 
@@ -131,6 +131,13 @@ const open = () => {
   }
   openPopup()
 }
+
+const loadTheme = async () => {
+  await getThemeList()
+  pickHandle()
+}
+emitter.on('loadTheme', loadTheme)
+onBeforeUnmount(() => emitter.off('loadTheme', loadTheme))
 </script>
 
 <template>
@@ -146,7 +153,7 @@ const open = () => {
   <div class="popup-box">
     <var-popup v-model:show="isShow"
                position="bottom"
-               @closed="() => closePopup()">
+               @closed="() => closePopup(null)">
       <div class="popup-content scroll-style">
         <div class="theme-box">
           <img :src="image.oss_name"

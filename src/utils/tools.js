@@ -1,5 +1,6 @@
 import { Snackbar } from "@varlet/ui";
 import hotkeys from "hotkeys-js";
+import mitt from 'mitt'
 
 export class TimerSimulateInterval {
   constructor () {
@@ -73,3 +74,5 @@ export function randomInt (min, max) {
 export const bindHotKey = (hotkey, fn) => hotkeys(hotkey, fn)
 
 export const unbindHotKey = hotkey => hotkeys.unbind(hotkey)
+
+export const emitter = mitt()
