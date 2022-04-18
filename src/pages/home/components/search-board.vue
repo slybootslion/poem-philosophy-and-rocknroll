@@ -1,7 +1,6 @@
 <script setup>
 import { computed, nextTick, onBeforeUnmount, ref } from "vue";
 import { closeSearchBoard, useSearchBoard } from "../../../store/functional-module";
-import { useHomeState } from "../../../store/home-theme";
 import {
   httpChangeSearchType, httpDeleteKeywordHistory, httpGetHotKeyByBing, httpGetSearchType, httpSearchKeywordHistory
 } from "../libs/httpTheme";
@@ -9,8 +8,7 @@ import { useUserInfo } from "../../../store/user-info";
 import { emitter } from "../../../utils/tools";
 import { debounce } from "lodash";
 
-const { showSearchBoard, changeSearchBoard, searchBoardState } = useSearchBoard()
-const { changeTimeState } = useHomeState()
+const { searchBoardState } = useSearchBoard()
 const isShow = computed({
   get: () => searchBoardState(),
   set: closeSearchBoard
@@ -31,7 +29,7 @@ initSearchType()
 const searchUrl = {
   Google: 'https://www.google.com/search?q=',
   Bing: 'https://www.bing.com/search?q=',
-  DuckDuckGo: 'https://duckduckgo.com/?q=',
+  Baidu: 'https://www.baidu.com/s?wd=',
 }
 const searchTypeChange = async () => {
   switch (searchType.value) {
@@ -155,23 +153,25 @@ onBeforeUnmount(() => emitter.off('loadSearch', loadSearch))
   }
 
   .search-type {
+    width: p2r(120);
     font-size: p2r(24);
-    padding: 0 p2r(20);
+    padding: 0 0 0 p2r(20);
     color: #fff;
     cursor: pointer;
+    //text-align: center;
   }
 
   .search-input {
-    width: 100%;
-    height: 40px;
+    flex: 1;
+    height: p2r(40);
     border: none;
     outline: none;
     box-shadow: none;
     //background-color: rgba(0, 0, 0, .05);
     background-color: transparent;
     color: #fff;
-    font-size: 20px;
-    padding: 0 20px;
+    font-size: p2r(20);
+    padding: 0 p2r(20) 0 0;
     box-sizing: border-box;
     transition: all .8s;
   }

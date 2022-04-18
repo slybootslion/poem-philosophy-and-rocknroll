@@ -1,6 +1,8 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import { useHomeState } from "./home-theme";
+import { useUserInfo } from "./user-info";
+import { showMessage } from "../utils/tools";
 const { changeTimeState } = useHomeState()
 
 export const useSearchBoard = defineStore('searchBoard', () => {
@@ -35,11 +37,20 @@ export const searchCurrent = () => {
   changeLinkBoard(false)
   changeTimeState(false)
 }
+const {user} = useUserInfo()
 export const linkCurrent = () => {
+  if (!user.isLogin) {
+    showMessage('未登录')
+    return
+  }
   changeLinkBoard()
   changeSearchBoard(false)
 }
 export const closeSearchBoard = () => {
   changeSearchBoard(false)
+  changeTimeState(true)
+}
+export const closeLinkBoard = () => {
+  changeLinkBoard(false)
   changeTimeState(true)
 }

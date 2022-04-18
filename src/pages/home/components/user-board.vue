@@ -61,7 +61,8 @@ const checkQrcodeLogin = async () => {
 
     // 登录后的操作
     emitter.emit('loadTheme')
-    emitter.emit('initSearchType')
+    emitter.emit('loadSearch')
+    emitter.emit('loadLinks')
   }
 }
 </script>

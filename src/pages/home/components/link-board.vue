@@ -1,7 +1,10 @@
 <script setup>
 import { useLinkBoard } from "../../../store/functional-module";
-import { computed } from "vue";
+import { computed, onBeforeUnmount, ref } from "vue";
 import { useHomeState } from "../../../store/home-theme";
+import { httpGetLinks } from "../libs/httpTheme";
+import { useUserInfo } from "../../../store/user-info";
+import { emitter } from "../../../utils/tools";
 
 const { changeLinkBoard, linkBoardState } = useLinkBoard()
 const { changeTimeState } = useHomeState()
@@ -13,14 +16,125 @@ const isShow = computed({
     changeTimeState(true)
   }
 })
+
+const links = ref([])
+const { user } = useUserInfo()
+const getLinks = async () => {
+  if (!user.isLogin) return
+  links.value = await httpGetLinks()
+}
+getLinks()
+
+emitter.on('loadLinks', getLinks)
+onBeforeUnmount(() => emitter.off('loadLinks', getLinks))
+
+const goPage = data => {
+  window.open(data.link_url)
+}
 </script>
 
 <template>
-  <var-popup v-model:show="isShow">
-    <div class="block">link fell</div>
-  </var-popup>
+  <div class="popup-box">
+    <var-popup v-model:show="isShow">
+      <div class="block">
+        <div class="link-item"
+             v-for="link in links"
+             :key="link.id"
+             @click="goPage(link)">
+          <div ref="iconEl" class="icon-favicon">
+            <img
+                v-if="link.link_icon"
+                class="icon-img"
+                :src="link.link_icon"
+            >
+            <var-icon name="notebook" v-else size="26" color="#ededed" />
+          </div>
+          <span class="link-item-title">
+          {{ link.abbreviation || link.link_name }}
+        </span>
+        </div>
+      </div>
+    </var-popup>
+  </div>
 </template>
 
 <style scoped lang="scss">
-//
+@import '../../../assets/style/index';
+
+.block {
+  display: flex;
+  flex-wrap: wrap;
+
+  .link-item {
+    height: 170px;
+    position: relative;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+
+    &:hover {
+
+      .icon-favicon {
+        background-color: rgba(180, 180, 180, .3);
+        backdrop-filter: blur(9px);
+      }
+    }
+
+    .icon-favicon {
+      width: 80px;
+      height: 80px;
+      border-radius: 10px;
+      margin: 0 10px 5px;
+      background-color: rgba(180, 180, 180, .15);
+      backdrop-filter: blur(3px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: background-color .35s;
+
+      .icon-img {
+        width: 26px;
+        height: 26px;
+      }
+    }
+
+    .link-item-title {
+      width: 80px;
+      bottom: -25px;
+      font-size: 12px;
+      left: 5%;
+      overflow: hidden;
+      text-align: center;
+      text-overflow: ellipsis;
+      transition: .25s;
+      white-space: nowrap;
+    }
+  }
+}
+
+.popup-box {
+  :deep(.var-popup__content) {
+    width: 80%;
+    height: 80%;
+    box-shadow: none;
+    background-color: transparent;
+
+    &::-webkit-scrollbar {
+      width: p2r(4);
+    }
+    &::-webkit-scrollbar-thumb {
+      border-radius: p2r(10);
+      -webkit-box-shadow: inset 0 0 p2r(5) rgba(0, 0, 0, .2);
+      background: rgba(0, 0, 0, .2);
+    }
+    &::-webkit-scrollbar-track {
+      -webkit-box-shadow: inset 0 0 p2r(5) rgba(0, 0, 0, .2);
+      border-radius: 0;
+      background: rgba(0, 0, 0, .1);
+    }
+  }
+}
 </style>

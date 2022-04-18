@@ -46,3 +46,7 @@ export const httpDeleteKeywordHistory = keyword => {
     }
   })
 }
+
+// link
+
+export const httpGetLinks = () => http({ url: '/ppr/client/links' })

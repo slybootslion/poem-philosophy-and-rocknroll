@@ -268,6 +268,7 @@ onBeforeUnmount(() => emitter.off('loadTheme', loadTheme))
         width: 100%;
         display: flex;
         justify-content: flex-start;
+        flex-wrap: wrap;
 
         img {
           width: p2r(240);

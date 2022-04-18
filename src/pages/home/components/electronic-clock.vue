@@ -3,6 +3,7 @@ import { useHomeState, useThemeNight } from "../../../store/home-theme";
 import { computed, onBeforeUnmount, reactive } from "vue";
 import { clock, isNightClock } from "../libs/clock-hook";
 import { TimerSimulateInterval } from "../../../utils/tools";
+import { searchCurrent, useSearchBoard } from "../../../store/functional-module";
 
 const {
   changeBgTimeIndex, changeNight,
@@ -36,10 +37,13 @@ clockTimer.simulateInterval({
   interval: 1000,
 })
 onBeforeUnmount(() => clockTimer.simulateClearInterval())
+
+const searchShow = () => searchCurrent()
 </script>
 
 <template>
   <div class="clock centerXY"
+       @click="searchShow"
        v-show="isTimeState()"
        :class="isNight ? 'night' : ''">
     <div class="time-box">
@@ -55,7 +59,7 @@ onBeforeUnmount(() => clockTimer.simulateClearInterval())
 @import '../../../assets/style/index';
 
 .clock {
-  height: 35%;
+  //height: 35%;
   color: #ffffff;
   display: flex;
   flex-direction: column;
