@@ -208,7 +208,7 @@ onBeforeUnmount(() => emitter.off('loadTheme', loadTheme))
   position: absolute;
   top: 0;
   left: 0;
-  background-image: url('https://static.uniformfox.com/static/pic/filter.png');
+  background-image: url('https://static.slybootslion.com/static/pic/filter.png');
   background-position: center center;
   background-size: cover;
   background-repeat: no-repeat;
