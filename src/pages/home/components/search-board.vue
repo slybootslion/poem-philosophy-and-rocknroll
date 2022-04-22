@@ -1,6 +1,6 @@
 <script setup>
 import { computed, nextTick, onBeforeUnmount, ref } from "vue";
-import { closeSearchBoard, useSearchBoard } from "../../../store/functional-module";
+import { closeSearchBoard, searchCurrent, useSearchBoard } from "../../../store/functional-module";
 import {
   httpChangeSearchType, httpDeleteKeywordHistory, httpGetHotKeyByBing, httpGetSearchType, httpSearchKeywordHistory
 } from "../libs/httpTheme";
@@ -95,6 +95,7 @@ onBeforeUnmount(() => emitter.off('loadSearch', loadSearch))
 
 <template>
   <div class="popup-box">
+    <span class="iconfont icon-search" @click="searchCurrent"></span>
     <var-popup v-model:show="isShow"
                @open="open"
                @closed="closed">
@@ -149,6 +150,19 @@ onBeforeUnmount(() => emitter.off('loadSearch', loadSearch))
       display: flex;
       align-content: center;
       border-bottom: p2r(2) solid #fff;
+    }
+  }
+
+  .icon-search {
+    position: absolute;
+    top: p2r(20);
+    left: p2r(20);
+    color: $color-info;
+    cursor: pointer;
+    font-size: p2r(20);
+
+    &:hover {
+      color: #fff;
     }
   }
 
