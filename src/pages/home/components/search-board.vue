@@ -23,7 +23,8 @@ const searchType = ref('Google')
 const { user } = useUserInfo()
 const initSearchType = async () => {
   if (!user.isLogin) return
-  searchType.value = await httpGetSearchType()
+  const res = await httpGetSearchType()
+  if (res.search_type) searchType.value = res.search_type
 }
 initSearchType()
 const searchUrl = {
@@ -45,6 +46,7 @@ const searchTypeChange = async () => {
     default:
       break
   }
+  if (!user.isLogin) return
   await httpChangeSearchType({ 'search_type': searchType.value })
 }
 const submitSearch = async (keyword = null) => {

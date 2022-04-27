@@ -119,7 +119,7 @@ const clearSearch = () => {
       height: 80px;
       border-radius: 10px;
       margin: 0 10px 5px;
-      background-color: rgba(180, 180, 180, .15);
+      background-color: rgba(30, 30, 30, .25);
       backdrop-filter: blur(3px);
       display: flex;
       justify-content: center;

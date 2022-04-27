@@ -24,7 +24,7 @@ const config = {
   },
   baseURL: import.meta.env.MODE && import.meta.env.MODE === 'development' ?
     'http://localhost:40000' :
-    'https://f.sketchmac.com',
+    'https://api.slybootslion.com',
   timeout: 10 * 1000, // 请求超时时间设置
   crossDomain: true,
   validateStatus (status) {

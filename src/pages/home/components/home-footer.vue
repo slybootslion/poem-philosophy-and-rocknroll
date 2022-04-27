@@ -1,4 +1,7 @@
 <script setup>
+import pic2 from '/src/assets/images/my-blog.png'
+import pic1 from '/src/assets/images/ghs.png'
+
 const linkData = [
   {
     link: 'https://beian.miit.gov.cn/',
@@ -7,12 +10,12 @@ const linkData = [
   {
     link: 'http://www.beian.gov.cn/',
     content: '陕公网安备 61011302000856号',
-    pic: '/src/assets/images/ghs.png',
+    pic: pic1,
   },
   {
     link: '',
     content: 'Copyright SlybootsLion All Rights Reserved',
-    pic: '/src/assets/images/my-blog.png',
+    pic: pic2,
   },
 ]
 
