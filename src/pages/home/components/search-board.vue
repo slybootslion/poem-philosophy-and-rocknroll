@@ -190,6 +190,10 @@ onBeforeUnmount(() => emitter.off('loadSearch', loadSearch))
     padding: 0 p2r(20) 0 0;
     box-sizing: border-box;
     transition: all .8s;
+
+    &:focus {
+      background-color: rgba(0, 0, 0, .15);
+    }
   }
 
   .clear-icon {

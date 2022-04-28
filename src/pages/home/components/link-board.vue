@@ -202,6 +202,10 @@ const clearSearch = () => {
     padding: 0 p2r(20);
     box-sizing: border-box;
     color: #fff;
+
+    &:focus {
+      background-color: rgba(0, 0, 0, .15);
+    }
   }
 
   .search-icon {
