@@ -23,7 +23,7 @@ const config = {
     'Content-Type': 'application/json; charset=utf-8',
   },
   baseURL: import.meta.env.MODE && import.meta.env.MODE === 'development' ?
-    'http://localhost:40000' :
+    'https://donuts.uniformfox.com' :
     'https://api.slybootslion.com',
   timeout: 10 * 1000, // 请求超时时间设置
   crossDomain: true,

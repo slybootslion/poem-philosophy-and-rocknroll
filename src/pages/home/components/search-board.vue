@@ -187,7 +187,7 @@ onBeforeUnmount(() => emitter.off('loadSearch', loadSearch))
     background-color: transparent;
     color: #fff;
     font-size: p2r(20);
-    padding: 0 p2r(20) 0 0;
+    padding: 0 p2r(20);
     box-sizing: border-box;
     transition: all .8s;
 
