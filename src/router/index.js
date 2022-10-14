@@ -4,9 +4,19 @@ import home from '../pages/home/home.vue'
 
 const routes = [
   {
-    path: '/', component: home,
+    name: 'home',
+    path: '/',
+    component: home,
     meta: {
       title: '最好的起始页网站',
+    }
+  },
+  {
+    name: 'login',
+    path: '/login',
+    component: () => import('../pages/login/login.vue'),
+    meta: {
+      title: '用户名密码登录'
     }
   }
 ]

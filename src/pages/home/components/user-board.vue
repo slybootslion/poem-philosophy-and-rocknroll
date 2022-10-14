@@ -1,11 +1,12 @@
 <script setup>
 import { ref } from "vue";
 import { httpLoginQrcode, httpLoginQrcodeCheck, httpLogout } from "../libs/httpUser";
-import { useUserInfo } from '../../../store/user-info'
-import { emitter, StorageCache, TimerSimulateInterval } from "../../../utils/tools";
+import { useUserInfo } from '@/store/user-info'
+import { emitter, StorageCache, TimerSimulateInterval } from "@/utils/tools";
 import { Dialog } from "@varlet/ui";
 import { usePopupState } from '../libs/popup-state-hook'
-import { useHomeState } from "../../../store/home-theme";
+import { useHomeState } from "@/store/home-theme";
+import { useRouter } from "vue-router";
 
 const qrcodeSrc = ref('')
 
@@ -65,6 +66,11 @@ const checkQrcodeLogin = async () => {
     emitter.emit('loadLinks')
   }
 }
+const router = useRouter()
+const goPwdPage = () => {
+  router.push({ name: 'login' })
+  qrcodePopupClosed()
+}
 </script>
 
 <template>
@@ -79,6 +85,7 @@ const checkQrcodeLogin = async () => {
           <img v-show="qrcodeSrc" :src="qrcodeSrc" alt="">
         </var-loading>
       </div>
+      <div class="key-icon" @click="goPwdPage">🔑</div>
     </var-popup>
   </div>
 </template>
@@ -103,6 +110,13 @@ const checkQrcodeLogin = async () => {
 .popup-box {
   :deep(.var-popup__content) {
     background-color: transparent;
+  }
+
+  .key-icon {
+    position: fixed;
+    bottom: p2r(20);
+    right: p2r(20);
+    cursor: pointer;
   }
 }
 

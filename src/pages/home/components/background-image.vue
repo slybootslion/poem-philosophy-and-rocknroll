@@ -1,10 +1,10 @@
 <script setup>
 import { computed, onBeforeUnmount, ref, watch } from "vue";
-import { useHomeState, usePageLoading, useThemeNight } from '../../../store/home-theme'
+import { useHomeState, usePageLoading, useThemeNight } from '@/store/home-theme'
 import { httpThemeList } from "../libs/httpTheme";
-import { emitter, randomInt, showMessage, TimerSimulateInterval } from "../../../utils/tools";
+import { emitter, randomInt, showMessage, TimerSimulateInterval, toggleFullScreen } from "@/utils/tools";
 import { usePopupState } from '../libs/popup-state-hook'
-import { useUserInfo } from "../../../store/user-info";
+import { useUserInfo } from "@/store/user-info";
 
 const url = ref('https://slybootslion.oss-cn-chengdu.aliyuncs.com/ppr/meitu/2021-04-25/80c43c8702f6d387113d74e0ea7f93a8.jpg')
 
@@ -138,6 +138,8 @@ const loadTheme = async () => {
 }
 emitter.on('loadTheme', loadTheme)
 onBeforeUnmount(() => emitter.off('loadTheme', loadTheme))
+
+const fullScreen = () => toggleFullScreen()
 </script>
 
 <template>
@@ -150,6 +152,11 @@ onBeforeUnmount(() => emitter.off('loadTheme', loadTheme))
             class="theme-btn"
             size="28"
             @click="open" />
+  <var-icon name="minus-box-outline"
+            v-show="isTimeState()"
+            class="full-screen-box"
+            size="28"
+            @click="fullScreen" />
   <div class="popup-box">
     <var-popup v-model:show="isShow"
                position="bottom"
@@ -223,6 +230,7 @@ onBeforeUnmount(() => emitter.off('loadTheme', loadTheme))
   background-color: rgba(0, 0, 0, .85);
 }
 
+.full-screen-box,
 .theme-btn {
   position: absolute;
   bottom: p2r(20);
@@ -233,6 +241,9 @@ onBeforeUnmount(() => emitter.off('loadTheme', loadTheme))
   &:hover {
     color: #fff;
   }
+}
+.full-screen-box {
+  left: p2r(50);
 }
 
 

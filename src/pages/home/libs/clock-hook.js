@@ -24,5 +24,5 @@ export const clock = () => {
 
 export const isNightClock = () => {
   const { hour } = clock()
-  return hour >= 22 || hour < 6
+  return hour >= 22 || hour < 8
 }

@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { showMessage, StorageCache } from "./tools";
-import { useUserInfo } from '../store/user-info'
+import { useUserInfo } from '@/store/user-info'
 
 const pending = {}
 const CancelToken = axios.CancelToken
@@ -23,7 +23,7 @@ const config = {
     'Content-Type': 'application/json; charset=utf-8',
   },
   baseURL: import.meta.env.MODE && import.meta.env.MODE === 'development' ?
-    'https://donuts.uniformfox.com' :
+    'https://py1.uniformfox.com/' :
     'https://api.slybootslion.com',
   timeout: 10 * 1000, // 请求超时时间设置
   crossDomain: true,

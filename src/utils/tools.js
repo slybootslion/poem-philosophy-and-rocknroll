@@ -1,6 +1,7 @@
 import { Snackbar } from "@varlet/ui";
 import hotkeys from "hotkeys-js";
 import mitt from 'mitt'
+import { v4 } from "uuid";
 
 export class TimerSimulateInterval {
   constructor () {
@@ -76,3 +77,22 @@ export const bindHotKey = (hotkey, fn) => hotkeys(hotkey, fn)
 export const unbindHotKey = hotkey => hotkeys.unbind(hotkey)
 
 export const emitter = mitt()
+
+export const getUuid = () => {
+  let uuid = StorageCache.get('uuid')
+  if (!uuid) {
+    uuid = v4()
+    StorageCache.set('uuid', uuid)
+  }
+  return uuid
+}
+
+export function toggleFullScreen() {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen();
+  } else {
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    }
+  }
+}

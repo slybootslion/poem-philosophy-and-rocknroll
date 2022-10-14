@@ -5,8 +5,8 @@ import UserBoard from "./components/user-board.vue";
 import ElectronicClock from "./components/electronic-clock.vue";
 import SearchBoard from "./components/search-board.vue";
 import LinkBoard from "./components/link-board.vue";
-import { bindHotKey, unbindHotKey } from "../../utils/tools";
-import { linkCurrent, searchCurrent } from "../../store/functional-module";
+import { bindHotKey, unbindHotKey } from "@/utils/tools";
+import { linkCurrent, searchCurrent } from "@/store/functional-module";
 import { onBeforeUnmount } from "vue";
 
 bindHotKey('alt+q', () => searchCurrent())

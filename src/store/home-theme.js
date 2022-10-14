@@ -1,8 +1,8 @@
 import { defineStore } from 'pinia'
 import { ref } from "vue";
-import { StorageCache } from "../utils/tools";
+import { StorageCache } from "@/utils/tools";
 import { pinia } from "./index";
-import { isNightClock } from "../pages/home/libs/clock-hook";
+import { isNightClock } from "@/pages/home/libs/clock-hook";
 
 export const usePageLoading = defineStore('pageLoading', () => {
   const isLoading = ref(true)

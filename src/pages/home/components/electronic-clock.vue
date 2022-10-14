@@ -1,9 +1,9 @@
 <script setup>
-import { useHomeState, useThemeNight } from "../../../store/home-theme";
+import { useHomeState, useThemeNight } from "@/store/home-theme";
 import { computed, onBeforeUnmount, reactive } from "vue";
 import { clock, isNightClock } from "../libs/clock-hook";
-import { TimerSimulateInterval } from "../../../utils/tools";
-import { searchCurrent, useSearchBoard } from "../../../store/functional-module";
+import { TimerSimulateInterval } from "@/utils/tools";
+import { searchCurrent } from "@/store/functional-module";
 
 const {
   changeBgTimeIndex, changeNight,
