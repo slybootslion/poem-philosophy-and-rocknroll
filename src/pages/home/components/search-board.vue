@@ -1,11 +1,11 @@
 <script setup>
 import { computed, nextTick, onBeforeUnmount, ref } from "vue";
-import { closeSearchBoard, searchCurrent, useSearchBoard } from "../../../store/functional-module";
+import { closeSearchBoard, searchCurrent, useSearchBoard } from "@/store/functional-module";
 import {
   httpChangeSearchType, httpDeleteKeywordHistory, httpGetHotKeyByBing, httpGetSearchType, httpSearchKeywordHistory
 } from "../libs/httpTheme";
-import { useUserInfo } from "../../../store/user-info";
-import { emitter } from "../../../utils/tools";
+import { useUserInfo } from "@/store/user-info";
+import { emitter } from "@/utils/tools";
 import { debounce } from "lodash";
 
 const { searchBoardState } = useSearchBoard()
@@ -108,8 +108,8 @@ onBeforeUnmount(() => emitter.off('loadSearch', loadSearch))
                @input="getHotKeyByBing"
                @keyup.esc="closeSearchBoard"
                @keyup.enter="() => submitSearch()"
-               @keyup.left="selectResult('left')"
-               @keyup.right="selectResult('right')"
+               @keyup.up="selectResult('left')"
+               @keyup.down="selectResult('right')"
                type="text"
                class="search-input">
         <var-icon name="close-circle"
