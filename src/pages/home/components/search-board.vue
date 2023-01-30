@@ -5,7 +5,7 @@ import {
   httpChangeSearchType, httpDeleteKeywordHistory, httpGetHotKeyByBing, httpGetSearchType, httpSearchKeywordHistory
 } from "../libs/httpTheme";
 import { useUserInfo } from "@/store/user-info";
-import { emitter } from "@/utils/tools";
+import { emitter, StorageCache } from "@/utils/tools";
 import { debounce } from "lodash";
 
 const { searchBoardState } = useSearchBoard()
@@ -23,7 +23,13 @@ const searchType = ref('Google')
 const { user } = useUserInfo()
 const initSearchType = async () => {
   if (!user.isLogin) return
+  const localType = StorageCache.get('searchType')
+  if (localType) {
+    searchType.value = localType
+    return
+  }
   const res = await httpGetSearchType()
+  StorageCache.set('searchType', res.search_type)
   if (res.search_type) searchType.value = res.search_type
 }
 initSearchType()
@@ -47,6 +53,7 @@ const searchTypeChange = async () => {
       break
   }
   if (!user.isLogin) return
+  StorageCache.set('searchType', searchType.value)
   await httpChangeSearchType({ 'search_type': searchType.value })
 }
 const submitSearch = async (keyword = null) => {
@@ -76,8 +83,8 @@ const selectResult = type => {
   const len = keywordList.value.length
   if (!len) return
   activeIndex.value = type === 'left' ?
-      activeIndex.value - 1 < 0 ? len - 1 : activeIndex.value - 1 :
-      activeIndex.value + 1 >= len ? 0 : activeIndex.value + 1
+    activeIndex.value - 1 < 0 ? len - 1 : activeIndex.value - 1 :
+    activeIndex.value + 1 >= len ? 0 : activeIndex.value + 1
   console.log(keywordList.value[activeIndex])
   searchText.value = keywordList.value[activeIndex.value].value
 }

@@ -227,7 +227,7 @@ const fullScreen = () => toggleFullScreen()
   position: absolute;
   top: 0;
   left: 0;
-  background-color: rgba(0, 0, 0, .85);
+  background-color: rgba(0, 0, 0, .95);
 }
 
 .full-screen-box,
